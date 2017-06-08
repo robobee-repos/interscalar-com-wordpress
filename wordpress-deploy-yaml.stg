@@ -9,15 +9,15 @@ apiVersion: v1
 kind: Service
 metadata:
   name: wordpress
+  namespace: interscalar-com
   labels:
     app: wordpress
     tier: frontend
-  namespace: interscalar-com
-  spec:
-    ports:
-    - name: "80"
-      port: 80
-      targetPort: 80
+spec:
+  ports:
+  - name: "80"
+    port: 80
+    targetPort: 80
   selector:
     app: wordpress
 
