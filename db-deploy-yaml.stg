@@ -2,6 +2,9 @@
 *
 */
 db-deploy-yaml(parent, vars) ::= <<
+
+---
+
 apiVersion: v1
 kind: Service
 metadata:
@@ -31,8 +34,10 @@ metadata:
     tier: backend
 spec:
   replicas: 1
-  strategy:
-    type: Recreate
+  selector:
+    matchLabels:
+      app: db
+      tier: backend
   template:
     metadata:
       labels:
