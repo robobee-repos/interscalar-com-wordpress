@@ -1,7 +1,7 @@
 /*
 *
 */
-wordpress-yaml(parent, vars) ::= <<
+wordpress-deploy-yaml(parent, vars) ::= <<
 apiVersion: v1
 kind: Service
 metadata:
