@@ -1,0 +1,108 @@
+/*
+*
+*/
+db-yaml(parent, vars) ::= <<
+apiVersion: v1
+kind: Service
+metadata:
+  name: mariadb
+  labels:
+    app: db
+    tier: backend
+  namespace: interscalar-com
+  spec:
+    ports:
+    - name: "3306"
+      port: 3306
+      targetPort: 3306
+  selector:
+    app: db
+  type: NodePort
+
+---
+
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: mariadb
+  namespace: interscalar-com
+  labels:
+    app: db
+    tier: backend
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: db
+        tier: backend
+    spec:
+      containers:
+      - image: bitnami/mariadb:latest
+        name: mariadb
+        env:
+        - name: ALLOW_EMPTY_PASSWORD
+          value: "no"
+        - name: MARIADB_ROOT_USER
+          valueFrom:
+            secretKeyRef:
+              name: db
+              key: root_user
+        - name: MARIADB_ROOT_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: db
+              key: root_password
+        - name: MARIADB_DATABASE
+          valueFrom:
+            secretKeyRef:
+              name: db
+              key: wordpress_db
+        - name: MARIADB_USER
+          valueFrom:
+            secretKeyRef:
+              name: db
+              key: wordpress_user
+        - name: MARIADB_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: db
+              key: wordpress_password
+        ports:
+        - containerPort: 3306
+        resources:
+          limits:
+            cpu: 100m
+            memory: 256Mi
+          requests:
+            cpu: 100m
+            memory: 256Mi
+        volumeMounts:
+        - mountPath: /bitnami/mariadb
+          name: mariadb-mariadb-data
+      restartPolicy: Always
+      volumes:
+      - name: mariadb-mariadb-data
+        persistentVolumeClaim:
+          claimName: mariadb-mariadb-data
+
+---
+
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: mariadb-mariadb-data
+  namespace: interscalar-com
+  labels:
+    app: db
+    tier: backend
+spec:
+  accessModes:
+  - ReadWriteOnce
+  resources:
+    requests:
+      storage: 100Mi
+
+>>

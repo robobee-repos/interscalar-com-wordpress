@@ -1,0 +1,169 @@
+/*
+*
+*/
+wordpress-yaml(parent, vars) ::= <<
+apiVersion: v1
+kind: Service
+metadata:
+  name: wordpress
+  labels:
+    app: wordpress
+    tier: frontend
+  namespace: interscalar-com
+  spec:
+    ports:
+    - name: "80"
+      port: 80
+      targetPort: 80
+  selector:
+    app: wordpress
+
+---
+
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: wordpress
+  namespace: interscalar-com
+  labels:
+    app: wordpress
+    tier: frontend
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: wordpress
+        tier: frontend
+    spec:
+      containers:
+      - image: bitnami/wordpress:latest
+        name: mariadb
+        env:
+        - name: WORDPRESS_USERNAME
+          valueFrom:
+            secretKeyRef:
+              name: wordpress
+              key: wordpress_user
+        - name: WORDPRESS_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: wordpress
+              key: wordpress_password
+        - name: WORDPRESS_EMAIL
+          valueFrom:
+            secretKeyRef:
+              name: wordpress
+              key: wordpress_email
+        - name: WORDPRESS_FIRST_NAME
+          valueFrom:
+            secretKeyRef:
+              name: wordpress
+              key: wordpress_first_name
+        - name: WORDPRESS_LAST_NAME
+          valueFrom:
+            secretKeyRef:
+              name: wordpress
+              key: wordpress_last_name
+        - name: WORDPRESS_BLOG_NAME
+          valueFrom:
+            secretKeyRef:
+              name: wordpress
+              key: wordpress_blog_name
+        - name: WORDPRESS_DATABASE_NAME
+          valueFrom:
+            secretKeyRef:
+              name: db
+              key: wordpress_db
+        - name: WORDPRESS_DATABASE_USER
+          valueFrom:
+            secretKeyRef:
+              name: db
+              key: wordpress_user
+        - name: WORDPRESS_DATABASE_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: db
+              key: wordpress_password
+        ports:
+        - containerPort: 3306
+        resources:
+          limits:
+            cpu: 100m
+            memory: 256Mi
+          requests:
+            cpu: 100m
+            memory: 256Mi
+        volumeMounts:
+        - mountPath: /bitnami/wordpress
+          name: wordpress-wordpress-data
+        - mountPath: /bitnami/apache
+          name: wordpress-apache-data
+        - mountPath: /bitnami/php
+          name: wordpress-php-data
+      restartPolicy: Always
+      volumes:
+      - name: wordpress-wordpress-data
+        persistentVolumeClaim:
+          claimName: wordpress-wordpress-data
+      - name: wordpress-apache-data
+        persistentVolumeClaim:
+          claimName: wordpress-apache-data
+      - name: wordpress-php-data
+        persistentVolumeClaim:
+          claimName: wordpress-php-data
+
+---
+
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: wordpress-wordpress-data
+  namespace: interscalar-com
+  labels:
+    app: wordpress
+    tier: frontend
+spec:
+  accessModes:
+  - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi
+
+---
+
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: wordpress-apache-data
+  namespace: interscalar-com
+  labels:
+    app: wordpress
+    tier: frontend
+spec:
+  accessModes:
+  - ReadWriteOnce
+  resources:
+    requests:
+      storage: 100Mi
+
+---
+
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: wordpress-php-data
+  namespace: interscalar-com
+  labels:
+    app: wordpress
+    tier: frontend
+spec:
+  accessModes:
+  - ReadWriteOnce
+  resources:
+    requests:
+      storage: 100Mi
+
+>>
