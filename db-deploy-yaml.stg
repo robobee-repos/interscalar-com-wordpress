@@ -15,7 +15,7 @@ metadata:
     tier: backend
 spec:
   ports:
-  - name: "3306"
+  - name: "mysql"
     port: 3306
     targetPort: 3306
   selector:
@@ -76,6 +76,7 @@ spec:
               key: wordpress_password
         ports:
         - containerPort: 3306
+          name: "mysql"
         resources:
           limits:
             cpu: 100m

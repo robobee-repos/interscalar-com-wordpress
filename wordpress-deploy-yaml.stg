@@ -15,7 +15,7 @@ metadata:
     tier: frontend
 spec:
   ports:
-  - name: "80"
+  - name: "http"
     port: 80
     targetPort: 80
   selector:
@@ -43,7 +43,7 @@ spec:
     spec:
       containers:
       - image: bitnami/wordpress:latest
-        name: mariadb
+        name: wordpress
         env:
         - name: WORDPRESS_USERNAME
           valueFrom:
@@ -75,6 +75,10 @@ spec:
             secretKeyRef:
               name: wordpress
               key: wordpress_blog_name
+        - name: MARIADB_HOST
+          value: mariadb
+        - name: MARIADB_PORT_NUMBER
+          value: 3306
         - name: WORDPRESS_DATABASE_NAME
           valueFrom:
             secretKeyRef:
@@ -91,7 +95,8 @@ spec:
               name: db
               key: wordpress_password
         ports:
-        - containerPort: 3306
+        - containerPort: 80
+          name: "http"
         resources:
           limits:
             cpu: 100m
