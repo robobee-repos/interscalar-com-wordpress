@@ -14,8 +14,7 @@ metadata:
     kubernetes.io/ingress.class: "nginx"
 spec:
   rules:
-  - host: interscalar.com
-    http:
+  - http:
       paths:
       - path: /
         backend:
