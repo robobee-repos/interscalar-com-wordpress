@@ -16,8 +16,8 @@ metadata:
 spec:
   ports:
   - name: "http"
-    port: 80
-    targetPort: 80
+    port: 8080
+    targetPort: 8080
   selector:
     app: wordpress
 
@@ -94,8 +94,10 @@ spec:
             secretKeyRef:
               name: db
               key: wordpress_password
+        - name: APACHE_HTTP_PORT_NUMBER
+          value: 8080
         ports:
-        - containerPort: 80
+        - containerPort: 8080
           name: "http"
         resources:
           limits:
