@@ -8,10 +8,10 @@ db-deploy-yaml(parent, vars) ::= <<
 apiVersion: v1
 kind: Service
 metadata:
-  name: mariadb
+  name: db
   namespace: interscalar-com
   labels:
-    app: db
+    app: mariadb
     tier: backend
 spec:
   ports:
@@ -19,7 +19,7 @@ spec:
     port: 3306
     targetPort: 3306
   selector:
-    app: db
+    app: mariadb
 
 ---
 
@@ -29,18 +29,18 @@ metadata:
   name: mariadb
   namespace: interscalar-com
   labels:
-    app: db
+    app: mariadb
     tier: backend
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: db
+      app: mariadb
       tier: backend
   template:
     metadata:
       labels:
-        app: db
+        app: mariadb
         tier: backend
     spec:
       containers:
@@ -101,7 +101,7 @@ metadata:
   name: mariadb-mariadb-data
   namespace: interscalar-com
   labels:
-    app: db
+    app: mariadb
     tier: backend
 spec:
   accessModes:

@@ -76,7 +76,7 @@ spec:
               name: wordpress
               key: wordpress_blog_name
         - name: MARIADB_HOST
-          value: mariadb
+          value: db
         - name: MARIADB_PORT_NUMBER
           value: 3306
         - name: WORDPRESS_DATABASE_NAME
