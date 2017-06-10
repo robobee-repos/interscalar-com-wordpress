@@ -1,7 +1,7 @@
 /*
 *
 */
-a-namespace-yaml(parent, vars) ::= <<
+aa-namespace-yaml(parent, vars) ::= <<
 kind: Namespace
 apiVersion: v1
 metadata:

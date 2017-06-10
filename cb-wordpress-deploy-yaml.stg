@@ -1,7 +1,7 @@
 /*
 *
 */
-wordpress-deploy-yaml(parent, vars) ::= <<
+cb-wordpress-deploy-yaml(parent, vars) ::= <<
 
 ---
 
