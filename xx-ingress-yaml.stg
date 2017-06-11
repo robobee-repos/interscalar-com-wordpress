@@ -21,8 +21,14 @@ spec:
         backend:
           serviceName: wordpress
           servicePort: 8080
-  rules:
   - host: interscalar.com.muellerpublic.de
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: wordpress
+          servicePort: 8080
+  - host: www.interscalar.com.muellerpublic.de
     http:
       paths:
       - path: /
