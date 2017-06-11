@@ -16,10 +16,10 @@ spec:
   tls:
   - hosts:
     - interscalar.com.muellerpublic.de
-      secretName: tls-secret
+    secretName: tls-secret
   - hosts:
     - www.interscalar.com.muellerpublic.de
-      secretName: tls-secret
+    secretName: tls-secret
   rules:
   - host: interscalar.com
     http:
