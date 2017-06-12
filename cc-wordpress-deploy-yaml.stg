@@ -42,60 +42,49 @@ spec:
         tier: frontend
     spec:
       containers:
-      - image: erwin82/wordpress:1
+      - image: erwin82/wordpress:4.8.0-r1
         name: wordpress
         env:
-        - name: WORDPRESS_USERNAME
-          valueFrom:
-            secretKeyRef:
-              name: wordpress
-              key: wordpress_user
-        - name: WORDPRESS_PASSWORD
-          valueFrom:
-            secretKeyRef:
-              name: wordpress
-              key: wordpress_password
-        - name: WORDPRESS_EMAIL
-          valueFrom:
-            secretKeyRef:
-              name: wordpress
-              key: wordpress_email
-        - name: WORDPRESS_FIRST_NAME
-          valueFrom:
-            secretKeyRef:
-              name: wordpress
-              key: wordpress_first_name
-        - name: WORDPRESS_LAST_NAME
-          valueFrom:
-            secretKeyRef:
-              name: wordpress
-              key: wordpress_last_name
-        - name: WORDPRESS_BLOG_NAME
-          valueFrom:
-            secretKeyRef:
-              name: wordpress
-              key: wordpress_blog_name
-        - name: MARIADB_HOST
-          value: db
-        - name: MARIADB_PORT_NUMBER
-          value: "3306"
-        - name: WORDPRESS_DATABASE_NAME
+        - name: WORDPRESS_DB_NAME
           valueFrom:
             secretKeyRef:
               name: db
               key: wordpress_db
-        - name: WORDPRESS_DATABASE_USER
+        - name: WORDPRESS_DB_USER
           valueFrom:
             secretKeyRef:
               name: db
               key: wordpress_user
-        - name: WORDPRESS_DATABASE_PASSWORD
+        - name: WORDPRESS_DB_PASSWORD
           valueFrom:
             secretKeyRef:
               name: db
               key: wordpress_password
+        - name: WORDPRESS_DB_HOST
+          valueFrom:
+            secretKeyRef:
+              name: wordpress
+              key: wordpress_db
         - name: APACHE_HTTP_PORT_NUMBER
-          value: "8080"
+          valueFrom:
+            secretKeyRef:
+              name: wordpress
+              key: wordpress_http_port
+        - name: APACHE_HTTPS_PORT_NUMBER
+          valueFrom:
+            secretKeyRef:
+              name: wordpress
+              key: wordpress_https_port
+        - name: APACHE_SERVER_NAME
+          valueFrom:
+            secretKeyRef:
+              name: wordpress
+              key: wordpress_host
+        - name: APACHE_SERVER_ADMIN_EMAIL
+          valueFrom:
+            secretKeyRef:
+              name: wordpress
+              key: wordpress_email
         ports:
         - containerPort: 8080
           name: "http"
@@ -118,12 +107,6 @@ spec:
       - name: wordpress-wordpress-data
         persistentVolumeClaim:
           claimName: wordpress-wordpress-data
-      - name: wordpress-apache-data
-        persistentVolumeClaim:
-          claimName: wordpress-apache-data
-      - name: wordpress-php-data
-        persistentVolumeClaim:
-          claimName: wordpress-php-data
 
 ---
 
@@ -143,37 +126,5 @@ spec:
       storage: 1Gi
 
 ---
-
-apiVersion: v1
-kind: PersistentVolumeClaim
-metadata:
-  name: wordpress-apache-data
-  namespace: interscalar-com
-  labels:
-    app: wordpress
-    tier: frontend
-spec:
-  accessModes:
-  - ReadWriteOnce
-  resources:
-    requests:
-      storage: 100Mi
-
----
-
-apiVersion: v1
-kind: PersistentVolumeClaim
-metadata:
-  name: wordpress-php-data
-  namespace: interscalar-com
-  labels:
-    app: wordpress
-    tier: frontend
-spec:
-  accessModes:
-  - ReadWriteOnce
-  resources:
-    requests:
-      storage: 100Mi
 
 >>
