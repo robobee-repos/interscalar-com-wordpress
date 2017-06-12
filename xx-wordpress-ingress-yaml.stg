@@ -1,7 +1,7 @@
 /*
 *
 */
-xx-ingress-yaml(parent, vars) ::= <<
+xx-wordpress-ingress-yaml(parent, vars) ::= <<
 apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
