@@ -96,12 +96,8 @@ spec:
             cpu: 100m
             memory: 256Mi
         volumeMounts:
-        - mountPath: /bitnami/wordpress
+        - mountPath: /var/www/html/wp-content
           name: wordpress-wordpress-data
-        - mountPath: /bitnami/apache
-          name: wordpress-apache-data
-        - mountPath: /bitnami/php
-          name: wordpress-php-data
       restartPolicy: Always
       volumes:
       - name: wordpress-wordpress-data
