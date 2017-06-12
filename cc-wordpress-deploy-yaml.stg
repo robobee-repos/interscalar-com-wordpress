@@ -96,7 +96,7 @@ spec:
             cpu: 100m
             memory: 256Mi
         volumeMounts:
-        - mountPath: /var/www/html/wp-content
+        - mountPath: /var/www/html
           name: wordpress-wordpress-data
       restartPolicy: Always
       volumes:
