@@ -91,10 +91,10 @@ spec:
         resources:
           limits:
             cpu: 100m
-            memory: 256Mi
+            memory: 300Mi
           requests:
             cpu: 100m
-            memory: 256Mi
+            memory: 300Mi
         volumeMounts:
         - mountPath: /var/www/html
           name: wordpress-wordpress-data
