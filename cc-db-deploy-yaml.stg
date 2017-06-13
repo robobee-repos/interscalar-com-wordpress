@@ -79,11 +79,11 @@ spec:
           name: "mysql"
         resources:
           limits:
-            cpu: 100m
-            memory: 256Mi
+            cpu: <vars.db.limits.cpu>
+            memory: <vars.db.limits.memory_mi>
           requests:
-            cpu: 100m
-            memory: 256Mi
+            cpu: <vars.db.requests.cpu>
+            memory: <vars.db.requests.memory_mi>
         volumeMounts:
         - mountPath: /bitnami/mariadb
           name: mariadb-mariadb-data

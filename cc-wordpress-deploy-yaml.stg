@@ -90,11 +90,11 @@ spec:
           name: "http"
         resources:
           limits:
-            cpu: 100m
-            memory: 300Mi
+            cpu: <vars.wordpress.limits.cpu>
+            memory: <vars.wordpress.limits.memory_mi>
           requests:
-            cpu: 100m
-            memory: 300Mi
+            cpu: <vars.wordpress.requests.cpu>
+            memory: <vars.wordpress.requests.memory_mi>
         volumeMounts:
         - mountPath: /var/www/html
           name: wordpress-wordpress-data
