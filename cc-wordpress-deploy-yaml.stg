@@ -99,7 +99,7 @@ spec:
           name: "php"
         resources:
           limits:
-            cpu: <vars.wordpress.limits.cpu_m>
+            cpu: <vars.wordpress.limits.cpu>
             memory: <vars.wordpress.limits.memory>
           requests:
             cpu: <vars.wordpress.requests.cpu>
