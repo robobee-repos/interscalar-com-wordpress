@@ -140,14 +140,15 @@ spec:
         - mountPath: /var/www/html
           name: wordpress-wordpress-data
         - mountPath: /nginx-in
-            configMapKeyRef:
-              name: wordpress
-              key: nginx.conf
+          name: nginx-nginx-config
       restartPolicy: Always
       volumes:
       - name: wordpress-wordpress-data
         persistentVolumeClaim:
           claimName: wordpress-wordpress-data
+      - name: nginx-nginx-config
+        configMap:
+          name: nginx
 
 ---
 

@@ -7,7 +7,7 @@
 * vars.nginx.clientMaxBodySize_m
 *
 */
-bb-wordpress-config-yaml(parent, vars) ::= <<
+bb-nginx-config-yaml(parent, vars) ::= <<
 apiVersion: v1
 kind: ConfigMap
 metadata:
