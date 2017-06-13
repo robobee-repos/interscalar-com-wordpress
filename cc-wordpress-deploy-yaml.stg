@@ -20,6 +20,23 @@ cc-wordpress-deploy-yaml(parent, vars) ::= <<
 ---
 
 apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: wordpress-wordpress-data
+  namespace: interscalar-com
+  labels:
+    app: wordpress
+    tier: frontend
+spec:
+  accessModes:
+  - ReadWriteMany
+  resources:
+    requests:
+      storage: 2Gi
+
+---
+
+apiVersion: v1
 kind: Service
 metadata:
   name: wordpress
@@ -131,23 +148,6 @@ spec:
       - name: wordpress-wordpress-data
         persistentVolumeClaim:
           claimName: wordpress-wordpress-data
-
----
-
-apiVersion: v1
-kind: PersistentVolumeClaim
-metadata:
-  name: wordpress-wordpress-data
-  namespace: interscalar-com
-  labels:
-    app: wordpress
-    tier: frontend
-spec:
-  accessModes:
-  - ReadWriteMany
-  resources:
-    requests:
-      storage: 2Gi
 
 ---
 
