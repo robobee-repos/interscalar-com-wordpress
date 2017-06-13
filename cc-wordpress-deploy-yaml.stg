@@ -4,15 +4,15 @@
 * vars.wordpress.image.name
 * vars.wordpress.image.version
 * vars.wordpress.limits.cpu
-* vars.wordpress.limits.memory_mi
+* vars.wordpress.limits.memory
 * vars.wordpress.requests.cpu
-* vars.wordpress.requests.memory_mi
+* vars.wordpress.requests.memory
 * vars.nginx.image.name
 * vars.nginx.image.version
 * vars.nginx.limits.cpu
-* vars.nginx.limits.memory_mi
+* vars.nginx.limits.memory
 * vars.nginx.requests.cpu
-* vars.nginx.requests.memory_mi
+* vars.nginx.requests.memory
 */
 
 cc-wordpress-deploy-yaml(parent, vars) ::= <<
@@ -78,10 +78,7 @@ spec:
         name: wordpress
         env:
         - name: WORDPRESS_DB_NAME
-          valueFrom:
-            secretKeyRef:
-              name: db
-              key: wordpress_db
+          value "db:3306"
         - name: WORDPRESS_DB_USER
           valueFrom:
             secretKeyRef:
@@ -97,36 +94,16 @@ spec:
             secretKeyRef:
               name: wordpress
               key: wordpress_db
-        - name: APACHE_HTTP_PORT_NUMBER
-          valueFrom:
-            secretKeyRef:
-              name: wordpress
-              key: wordpress_http_port
-        - name: APACHE_HTTPS_PORT_NUMBER
-          valueFrom:
-            secretKeyRef:
-              name: wordpress
-              key: wordpress_https_port
-        - name: APACHE_SERVER_NAME
-          valueFrom:
-            secretKeyRef:
-              name: wordpress
-              key: wordpress_host
-        - name: APACHE_SERVER_ADMIN_EMAIL
-          valueFrom:
-            secretKeyRef:
-              name: wordpress
-              key: wordpress_email
         ports:
         - containerPort: 9000
           name: "php"
         resources:
           limits:
-            cpu: <vars.wordpress.limits.cpu>
-            memory: <vars.wordpress.limits.memory_mi>
+            cpu: <vars.wordpress.limits.cpu_m>
+            memory: <vars.wordpress.limits.memory>
           requests:
             cpu: <vars.wordpress.requests.cpu>
-            memory: <vars.wordpress.requests.memory_mi>
+            memory: <vars.wordpress.requests.memory>
         volumeMounts:
         - mountPath: /var/www/html
           name: wordpress-wordpress-data
@@ -138,10 +115,10 @@ spec:
         resources:
           limits:
             cpu: <vars.nginx.limits.cpu>
-            memory: <vars.nginx.limits.memory_mi>
+            memory: <vars.nginx.limits.memory>
           requests:
             cpu: <vars.nginx.requests.cpu>
-            memory: <vars.nginx.requests.memory_mi>
+            memory: <vars.nginx.requests.memory>
         volumeMounts:
         - mountPath: /var/www/html
           name: wordpress-wordpress-data
