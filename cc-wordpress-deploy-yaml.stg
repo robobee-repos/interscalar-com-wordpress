@@ -95,7 +95,10 @@ spec:
         name: wordpress
         env:
         - name: WORDPRESS_DB_NAME
-          value: "db:3306"
+          valueFrom:
+            secretKeyRef:
+              name: db
+              key: wordpress_db
         - name: WORDPRESS_DB_USER
           valueFrom:
             secretKeyRef:
@@ -107,10 +110,7 @@ spec:
               name: db
               key: wordpress_password
         - name: WORDPRESS_DB_HOST
-          valueFrom:
-            secretKeyRef:
-              name: wordpress
-              key: wordpress_db
+          value: "db:3306"
         ports:
         - containerPort: 9000
           name: "php"
