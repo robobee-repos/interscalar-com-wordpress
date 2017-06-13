@@ -1,6 +1,12 @@
 /*
-*
+* Mandatory:
+* 
+* vars.db.limits.cpu
+* vars.db.limits.memory_mi
+* vars.db.requests.cpu
+* vars.db.requests.memory_mi
 */
+
 cc-db-deploy-yaml(parent, vars) ::= <<
 
 ---
