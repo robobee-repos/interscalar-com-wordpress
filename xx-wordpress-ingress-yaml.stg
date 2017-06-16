@@ -17,6 +17,7 @@ metadata:
     kubernetes.io/ingress.class: "nginx"
     kubernetes.io/tls-acme: "true"
     ingress.kubernetes.io/proxy-body-size: <vars.nginx.clientMaxBodySize_m>m
+    ingress.kubernetes.io/affinity: "cookie"
 spec:
   tls:
   - hosts:
