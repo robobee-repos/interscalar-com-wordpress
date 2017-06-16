@@ -7,6 +7,9 @@
 * vars.wordpress.limits.memory
 * vars.wordpress.requests.cpu
 * vars.wordpress.requests.memory
+* vars.wordpress.php.memoryLimit_MB
+* vars.wordpress.php.maxExecutionTime_s
+* vars.wordpress.php.opcacheMemoryConsumption_MB
 * vars.nginx.image.name
 * vars.nginx.image.version
 * vars.nginx.limits.cpu
@@ -111,6 +114,12 @@ spec:
               key: wordpress_password
         - name: WORDPRESS_DB_HOST
           value: "db:3306"
+        - name: PHP_MEMORY_LIMIT_MB
+          value: "<vars.wordpress.php.memoryLimit_MB>"
+        - name: PHP_MAX_EXECUTION_TIME
+          value: "<vars.wordpress.php.maxExecutionTime_s>"
+        - name: PHP_OPCACHE_MEMORY_CONSUMPTION_MB
+          value: "<vars.wordpress.php.opcacheMemoryConsumption_MB>"
         ports:
         - containerPort: 9000
           name: "php"
