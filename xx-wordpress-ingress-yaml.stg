@@ -17,18 +17,9 @@ spec:
   tls:
   - hosts:
     - interscalar.com.muellerpublic.de
-    secretName: tls-secret
-  - hosts:
     - www.interscalar.com.muellerpublic.de
     secretName: tls-secret
   rules:
-  - host: interscalar.com
-    http:
-      paths:
-      - path: /
-        backend:
-          serviceName: wordpress
-          servicePort: 8080
   - host: interscalar.com.muellerpublic.de
     http:
       paths:
