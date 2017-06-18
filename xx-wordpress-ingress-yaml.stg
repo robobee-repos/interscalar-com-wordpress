@@ -56,8 +56,6 @@ metadata:
   annotations:
     kubernetes.io/ingress.class: "nginx"
     kubernetes.io/tls-acme: "true"
-    ingress.kubernetes.io/configuration-snippet: |
-      return 301 https://<first(vars.nginx.hosts)>$request_uri;
 spec:
   tls:
   - hosts:
