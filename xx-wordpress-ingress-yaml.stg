@@ -23,15 +23,46 @@ metadata:
 spec:
   tls:
   - hosts:
-    <vars.nginx.hosts:{h|- <h>};separator="\n">
+    <first(vars.nginx.hosts):{h|- <h>};separator="\n">
     secretName: tls-secret
   rules:
-<vars.nginx.hosts:hostRule();separator="\n">
+  - host: <first(vars.nginx.hosts)>
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: wordpress
+          servicePort: 9090
+<first(vars.nginx.hosts):hostRule();separator="\n">
+
+---
+
+<rest(vars.nginx.hosts):redirectIngress(parent, vars);separator="\n---\n">
 
 >>
 
-hostRule(host) ::= <<
-  - host: interscalar.com
+
+redirectIngress(host, parent, vars) ::= <<
+
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: wordpress-<host>
+  namespace: interscalar-com
+  labels:
+    app: wordpress
+    tier: frontend
+    deployment: wordpress
+  annotations:
+    kubernetes.io/ingress.class: "nginx"
+    kubernetes.io/tls-acme: "true"
+spec:
+  tls:
+  - hosts:
+    - <host>
+    secretName: tls-secret-<host>
+  rules:
+  - host: <host>
     http:
       paths:
       - path: /
