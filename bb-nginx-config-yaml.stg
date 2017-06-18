@@ -19,7 +19,6 @@ metadata:
     deployment: wordpress
 data:
   nginx.conf: |
-    #user  nginx;
     worker_processes  <vars.nginx.workerProcesses>;
     error_log  /var/log/nginx/error.log warn;
     pid        /var/run/nginx.pid;
@@ -39,8 +38,7 @@ data:
         gzip  on;
         index index.php index.html index.htm;
         client_max_body_size <vars.nginx.clientMaxBodySize_m>m;
-        fastcgi_cache_path /var/cache/nginx levels=1:2 keys_zone=WORDPRESS_CACHE:100m inactive=60m;
-        fastcgi_cache_key "$scheme$request_method$host$request_uri";
+<rest(vars.nginx.hosts):redirectHost(parent, vars);separator="\n">
         server {
             listen 9090 default_server;
             listen [::]:9090 default_server;
@@ -82,8 +80,6 @@ data:
                 fastcgi_index  index.php;
                 fastcgi_param PATH_TRANSLATED $document_root$fastcgi_script_name;
                 include        fastcgi_params;
-                #fastcgi_cache WORDPRESS_CACHE;
-                #fastcgi_cache_valid 200 60m;
             }
             #
             location ~* \.(js|css|png|jpg|jpeg|gif|ico)$ {
@@ -99,4 +95,14 @@ data:
         }
     }
 
+>>
+
+redirectHost(host, parent, vars) ::= <<
+        server {
+            listen 9090 default_server;
+            listen [::]:9090 default_server;
+            root /var/www/html;
+            server_name <host>;
+            return 301 https://www.<first(vars.nginx.hosts)>$request_uri;
+        }
 >>
