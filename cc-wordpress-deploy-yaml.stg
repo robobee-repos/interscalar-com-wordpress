@@ -184,8 +184,8 @@ spec:
           httpGet:
             path: /index.php
             port: 9090
-          initialDelaySeconds: 5
-          periodSeconds: 5
+          initialDelaySeconds: 30
+          periodSeconds: 3
           timeoutSeconds: 5
       restartPolicy: Always
       volumes:
