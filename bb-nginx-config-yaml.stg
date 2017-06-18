@@ -99,8 +99,6 @@ data:
 
 redirectHost(host, parent, vars) ::= <<
         server {
-            listen 9090;
-            listen [::]:9090;
             root /var/www/html;
             server_name <host>;
             return 301 https://www.<first(vars.nginx.hosts)>$request_uri;
