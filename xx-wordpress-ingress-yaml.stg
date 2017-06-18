@@ -59,7 +59,7 @@ metadata:
 spec:
   tls:
   - hosts:
-    - <vars.nginx.hosts>
+    - <host>
     secretName: tls-secret-<host>
   rules:
   - host: <host>
