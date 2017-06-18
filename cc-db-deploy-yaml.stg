@@ -19,6 +19,7 @@ metadata:
   labels:
     app: mariadb
     tier: backend
+    deployment: wordpress
 spec:
   ports:
   - name: "mysql"
@@ -26,6 +27,24 @@ spec:
     targetPort: 3306
   selector:
     app: mariadb
+
+---
+
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: mariadb-mariadb-data
+  namespace: interscalar-com
+  labels:
+    app: mariadb
+    tier: backend
+    deployment: wordpress
+spec:
+  accessModes:
+  - ReadWriteOnce
+  resources:
+    requests:
+      storage: 100Mi
 
 ---
 
@@ -37,12 +56,14 @@ metadata:
   labels:
     app: mariadb
     tier: backend
+    deployment: wordpress
 spec:
   replicas: 1
   selector:
     matchLabels:
       app: mariadb
       tier: backend
+      deployment: wordpress
   template:
     metadata:
       labels:
@@ -100,20 +121,5 @@ spec:
           claimName: mariadb-mariadb-data
 
 ---
-
-apiVersion: v1
-kind: PersistentVolumeClaim
-metadata:
-  name: mariadb-mariadb-data
-  namespace: interscalar-com
-  labels:
-    app: mariadb
-    tier: backend
-spec:
-  accessModes:
-  - ReadWriteOnce
-  resources:
-    requests:
-      storage: 100Mi
 
 >>

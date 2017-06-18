@@ -34,6 +34,7 @@ metadata:
   labels:
     app: wordpress
     tier: frontend
+    deployment: wordpress
 spec:
   accessModes:
   - ReadWriteMany
@@ -51,6 +52,7 @@ metadata:
   labels:
     app: wordpress
     tier: frontend
+    deployment: wordpress
 spec:
   ports:
   - name: "http"
@@ -69,6 +71,7 @@ metadata:
   labels:
     app: wordpress
     tier: frontend
+    deployment: wordpress
 spec:
   ports:
   - name: "php"
@@ -87,6 +90,7 @@ metadata:
   labels:
     app: wordpress
     tier: frontend
+    deployment: wordpress
 spec:
   replicas: 1
   strategy:
@@ -96,6 +100,7 @@ spec:
       labels:
         app: wordpress
         tier: frontend
+        deployment: wordpress
     spec:
       containers:
       - image: <vars.wordpress.image.name>:<vars.wordpress.image.version>

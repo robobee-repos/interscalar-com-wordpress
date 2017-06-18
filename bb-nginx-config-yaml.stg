@@ -16,6 +16,7 @@ metadata:
   labels:
     app: nginx
     tier: frontend
+    deployment: wordpress
 data:
   nginx.conf: |
     #user  nginx;
