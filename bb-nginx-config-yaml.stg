@@ -82,8 +82,8 @@ data:
                 fastcgi_index  index.php;
                 fastcgi_param PATH_TRANSLATED $document_root$fastcgi_script_name;
                 include        fastcgi_params;
-                fastcgi_cache WORDPRESS_CACHE;
-                fastcgi_cache_valid 200 60m;
+                #fastcgi_cache WORDPRESS_CACHE;
+                #fastcgi_cache_valid 200 60m;
             }
             #
             location ~* \.(js|css|png|jpg|jpeg|gif|ico)$ {
