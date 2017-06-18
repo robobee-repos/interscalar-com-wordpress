@@ -27,7 +27,7 @@ spec:
     <first(vars.nginx.hosts):{h|- <h>};separator="\n">
     secretName: tls-secret
   rules:
-  - host: interscalar.com.muellerpublic.de
+  - host: <first(vars.nginx.hosts)>
     http:
       paths:
       - path: /
