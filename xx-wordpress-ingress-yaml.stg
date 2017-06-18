@@ -31,7 +31,7 @@ spec:
 >>
 
 hostRule(host) ::= <<
-  - host: interscalar.com
+  - host: <host>
     http:
       paths:
       - path: /
