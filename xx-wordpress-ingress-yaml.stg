@@ -1,6 +1,7 @@
 /*
  * Mandatory:
  * 
+ * vars.nginx.hosts
  * vars.nginx.clientMaxBodySize_m
  *
  */
@@ -22,23 +23,19 @@ metadata:
 spec:
   tls:
   - hosts:
-    - interscalar.com.muellerpublic.de
-    - www.interscalar.com.muellerpublic.de
+    <vars.nginx.hosts:{h|- <h>};separator="\n">
     secretName: tls-secret
   rules:
-  - host: interscalar.com.muellerpublic.de
-    http:
-      paths:
-      - path: /
-        backend:
-          serviceName: wordpress
-          servicePort: 9090
-  - host: www.interscalar.com.muellerpublic.de
-    http:
-      paths:
-      - path: /
-        backend:
-          serviceName: wordpress
-          servicePort: 9090
+<vars.nginx.hosts:hostRule();separator="\n">
 
+>>
+
+hostRule(host) ::= <<
+  - host: interscalar.com
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: wordpress
+          servicePort: 9090
 >>
