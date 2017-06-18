@@ -41,8 +41,8 @@ data:
         fastcgi_cache_path /var/cache/nginx levels=1:2 keys_zone=WORDPRESS_CACHE:100m inactive=60m;
         fastcgi_cache_key "$scheme$request_method$host$request_uri";
         server {
-            listen 8080 default_server;
-            listen [::]:8080 default_server;
+            listen 9090 default_server;
+            listen [::]:9090 default_server;
             root /var/www/html;
             server_name <vars.nginx.hosts;separator=" ">;
             index index.php;
@@ -88,6 +88,12 @@ data:
             location ~* \.(js|css|png|jpg|jpeg|gif|ico)$ {
                     expires max;
                     log_not_found off;
+            }
+            # php-fpm ping and status.
+            location ~ ^/(phpstatus|ping)$ {
+                fastcgi_pass   piwik-php:9000;
+                fastcgi_param PATH_TRANSLATED $document_root$fastcgi_script_name;
+                include        fastcgi_params;
             }
         }
     }
