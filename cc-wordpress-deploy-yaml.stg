@@ -180,12 +180,6 @@ spec:
             port: 9090
           initialDelaySeconds: 30
           periodSeconds: 3
-        readinessProbe:
-          httpGet:
-            path: /
-            port: 9090
-          initialDelaySeconds: 30
-          periodSeconds: 3
       restartPolicy: Always
       volumes:
       - name: wordpress-wordpress-data
