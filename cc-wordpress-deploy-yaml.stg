@@ -93,8 +93,11 @@ metadata:
     deployment: wordpress
 spec:
   replicas: 1
-  strategy:
-    type: Recreate
+  selector:
+    matchLabels:
+      app: wordpress
+      tier: frontend
+      deployment: wordpress
   template:
     metadata:
       labels:

@@ -69,6 +69,7 @@ spec:
       labels:
         app: mariadb
         tier: backend
+        deployment: wordpress
     spec:
       containers:
       - image: bitnami/mariadb:latest
