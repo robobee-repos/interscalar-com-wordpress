@@ -60,7 +60,7 @@ metadata:
       return 301 https://<first(vars.nginx.hosts)>$request_uri;
 spec:
   rules:
-  - host: interscalar.com
+  - host: <host>
     http:
       paths:
       - path: /
