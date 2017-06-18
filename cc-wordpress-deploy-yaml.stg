@@ -153,6 +153,13 @@ spec:
         volumeMounts:
         - mountPath: /var/www/html
           name: wordpress-wordpress-data
+        readinessProbe:
+          httpGet:
+            path: /index.php
+            port: 9090
+          initialDelaySeconds: 5
+          periodSeconds: 5
+          timeoutSeconds: 5
       - image: <vars.nginx.image.name>:<vars.nginx.image.version>
         name: nginx
         ports:
