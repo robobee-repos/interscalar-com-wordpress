@@ -48,7 +48,7 @@ redirectIngress(host, parent, vars) ::= <<
 apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
-  name: wordpress
+  name: wordpress-<host>
   namespace: interscalar-com
   labels:
     app: wordpress
