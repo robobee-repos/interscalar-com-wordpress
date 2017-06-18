@@ -182,11 +182,10 @@ spec:
           periodSeconds: 3
         readinessProbe:
           httpGet:
-            path: /index.php
+            path: /
             port: 9090
           initialDelaySeconds: 30
           periodSeconds: 3
-          timeoutSeconds: 5
       restartPolicy: Always
       volumes:
       - name: wordpress-wordpress-data
