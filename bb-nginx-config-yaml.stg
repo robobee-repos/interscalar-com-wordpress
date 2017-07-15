@@ -76,7 +76,7 @@ data:
             # pass the PHP scripts to FastCGI server listening on 127.0.0.1:9000
             #
             location ~ \.php$ {
-                fastcgi_pass   wordpress-php:9000;
+                fastcgi_pass   localhost:9000;
                 fastcgi_index  index.php;
                 fastcgi_param PATH_TRANSLATED $document_root$fastcgi_script_name;
                 include        fastcgi_params;
@@ -90,7 +90,7 @@ data:
             }
             # php-fpm ping and status.
             location ~ ^/(phpstatus|ping)$ {
-                fastcgi_pass   wordpress-php:9000;
+                fastcgi_pass   localhost:9000;
                 fastcgi_param PATH_TRANSLATED $document_root$fastcgi_script_name;
                 include        fastcgi_params;
             }
