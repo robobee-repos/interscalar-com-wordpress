@@ -9,10 +9,10 @@
  * vars.wordpress.requests.memory
  * vars.wordpress.php.memoryLimit_MB
  * vars.wordpress.php.maxExecutionTime
- * vars.piwik.php.maxChildren
- * vars.piwik.php.startServers
- * vars.piwik.php.minSpareServers
- * vars.piwik.php.maxSpareServers
+ * vars.wordpress.php.maxChildren
+ * vars.wordpress.php.startServers
+ * vars.wordpress.php.minSpareServers
+ * vars.wordpress.php.maxSpareServers
  * vars.wordpress.php.opcacheMemoryConsumption_MB
  * vars.nginx.image.name
  * vars.nginx.image.version
@@ -134,13 +134,13 @@ spec:
         - name: PHP_MAX_EXECUTION_TIME
           value: "<vars.wordpress.php.maxExecutionTime>"
         - name: PHP_FPM_MAX_CHILDREN
-          value: "<vars.piwik.php.maxChildren>"
+          value: "<vars.wordpress.php.maxChildren>"
         - name: PHP_FPM_START_SERVERS
-          value: "<vars.piwik.php.startServers>"
+          value: "<vars.wordpress.php.startServers>"
         - name: PHP_FPM_MIN_SPARE_SERVERS
-          value: "<vars.piwik.php.minSpareServers>"
+          value: "<vars.wordpress.php.minSpareServers>"
         - name: PHP_FPM_MAX_SPARE_SERVERS
-          value: "<vars.piwik.php.maxSpareServers>"
+          value: "<vars.wordpress.php.maxSpareServers>"
         - name: PHP_OPCACHE_MEMORY_CONSUMPTION_MB
           value: "<vars.wordpress.php.opcacheMemoryConsumption_MB>"
         ports:
