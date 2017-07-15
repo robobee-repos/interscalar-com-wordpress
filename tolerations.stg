@@ -1,0 +1,11 @@
+/*
+ *
+ */
+
+tolerationsGroup(parent, vars) ::= <<
+      tolerations:
+      - effect: NoSchedule
+        key: dedicated
+        operator: Equal
+        value: web
+>>

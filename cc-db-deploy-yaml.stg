@@ -1,11 +1,15 @@
 /*
-* Mandatory:
-* 
-* vars.db.limits.cpu
-* vars.db.limits.memory
-* vars.db.requests.cpu
-* vars.db.requests.memory
-*/
+ * Mandatory:
+ *
+ * vars.db.limits.cpu
+ * vars.db.limits.memory
+ * vars.db.requests.cpu
+ * vars.db.requests.memory
+ */
+
+import "maradns_probe.stg"
+import "affinities.stg"
+import "tolerations.stg"
 
 cc-db-deploy-yaml(parent, vars) ::= <<
 
@@ -19,7 +23,7 @@ metadata:
   labels:
     app: mariadb
     tier: backend
-    deployment: wordpress
+    group: interscalar-com
 spec:
   ports:
   - name: "mysql"
@@ -38,7 +42,7 @@ metadata:
   labels:
     app: mariadb
     tier: backend
-    deployment: wordpress
+    group: interscalar-com
 spec:
   accessModes:
   - ReadWriteOnce
@@ -56,20 +60,20 @@ metadata:
   labels:
     app: mariadb
     tier: backend
-    deployment: wordpress
+    group: interscalar-com
 spec:
   replicas: 1
   selector:
     matchLabels:
       app: mariadb
       tier: backend
-      deployment: wordpress
+      group: interscalar-com
   template:
     metadata:
       labels:
         app: mariadb
         tier: backend
-        deployment: wordpress
+        group: interscalar-com
     spec:
       containers:
       - image: bitnami/mariadb:latest
@@ -115,11 +119,14 @@ spec:
         volumeMounts:
         - mountPath: /bitnami/mariadb
           name: mariadb-mariadb-data
+<readinessProbe(parent, vars)>
       restartPolicy: Always
       volumes:
       - name: mariadb-mariadb-data
         persistentVolumeClaim:
           claimName: mariadb-mariadb-data
+<affinitiesGroup(parent, vars)>
+<tolerationsGroup(parent, vars)>
 
 ---
 

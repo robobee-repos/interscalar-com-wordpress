@@ -1,12 +1,13 @@
 /*
 * Mandatory:
-* 
+*
 * vars.nginx.hosts[]
 * vars.nginx.workerProcesses
 * vars.nginx.workerConnections
-* vars.nginx.clientMaxBodySize_m
-*
+* vars.nginx.clientMaxBodySize
+* vars.wordpress.php.maxExecutionTime
 */
+
 bb-nginx-config-yaml(parent, vars) ::= <<
 apiVersion: v1
 kind: ConfigMap
@@ -16,7 +17,7 @@ metadata:
   labels:
     app: nginx
     tier: frontend
-    deployment: wordpress
+    group: interscalar-com
 data:
   nginx.conf: |
     worker_processes  <vars.nginx.workerProcesses>;
@@ -33,15 +34,16 @@ data:
                           '"$http_user_agent" "$http_x_forwarded_for"';
         access_log  /var/log/nginx/access.log  main;
         sendfile        on;
-        #tcp_nopush     on;
+        tcp_nopush     on;
+        tcp_nodelay on;
         keepalive_timeout  65;
         gzip  on;
         index index.php index.html index.htm;
-        client_max_body_size <vars.nginx.clientMaxBodySize_m>m;
+        client_max_body_size <vars.nginx.clientMaxBodySize>;
 <rest(vars.nginx.hosts):redirectHost(parent, vars);separator="\n">
         server {
-            listen 9090 default_server;
-            listen [::]:9090 default_server;
+            listen 8080 default_server;
+            listen [::]:8080 default_server;
             root /var/www/html;
             server_name <vars.nginx.hosts;separator=" ">;
             index index.php;
@@ -80,6 +82,8 @@ data:
                 fastcgi_index  index.php;
                 fastcgi_param PATH_TRANSLATED $document_root$fastcgi_script_name;
                 include        fastcgi_params;
+                fastcgi_read_timeout <vars.piwik.php.maxExecutionTime>;
+                fastcgi_send_timeout <vars.piwik.php.maxExecutionTime>;
             }
             #
             location ~* \.(js|css|png|jpg|jpeg|gif|ico)$ {

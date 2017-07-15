@@ -1,26 +1,29 @@
 /*
-* Mandatory:
-* 
-* vars.wordpress.image.name
-* vars.wordpress.image.version
-* vars.wordpress.limits.cpu
-* vars.wordpress.limits.memory
-* vars.wordpress.requests.cpu
-* vars.wordpress.requests.memory
-* vars.wordpress.php.memoryLimit_MB
-* vars.wordpress.php.maxExecutionTime_s
-* vars.piwik.php.maxChildren
-* vars.piwik.php.startServers
-* vars.piwik.php.minSpareServers
-* vars.piwik.php.maxSpareServers
-* vars.wordpress.php.opcacheMemoryConsumption_MB
-* vars.nginx.image.name
-* vars.nginx.image.version
-* vars.nginx.limits.cpu
-* vars.nginx.limits.memory
-* vars.nginx.requests.cpu
-* vars.nginx.requests.memory
-*/
+ * Mandatory:
+ *
+ * vars.wordpress.image.name
+ * vars.wordpress.image.version
+ * vars.wordpress.limits.cpu
+ * vars.wordpress.limits.memory
+ * vars.wordpress.requests.cpu
+ * vars.wordpress.requests.memory
+ * vars.wordpress.php.memoryLimit_MB
+ * vars.wordpress.php.maxExecutionTime
+ * vars.piwik.php.maxChildren
+ * vars.piwik.php.startServers
+ * vars.piwik.php.minSpareServers
+ * vars.piwik.php.maxSpareServers
+ * vars.wordpress.php.opcacheMemoryConsumption_MB
+ * vars.nginx.image.name
+ * vars.nginx.image.version
+ * vars.nginx.limits.cpu
+ * vars.nginx.limits.memory
+ * vars.nginx.requests.cpu
+ * vars.nginx.requests.memory
+ */
+
+import "affinities.stg"
+import "tolerations.stg"
 
 cc-wordpress-deploy-yaml(parent, vars) ::= <<
 
@@ -34,7 +37,7 @@ metadata:
   labels:
     app: wordpress
     tier: frontend
-    deployment: wordpress
+    group: interscalar-com
 spec:
   accessModes:
   - ReadWriteMany
@@ -52,12 +55,12 @@ metadata:
   labels:
     app: wordpress
     tier: frontend
-    deployment: wordpress
+    group: interscalar-com
 spec:
   ports:
   - name: "http"
-    port: 9090
-    targetPort: 9090
+    port: 8080
+    targetPort: 8080
   selector:
     app: wordpress
 
@@ -71,7 +74,7 @@ metadata:
   labels:
     app: wordpress
     tier: frontend
-    deployment: wordpress
+    group: interscalar-com
 spec:
   ports:
   - name: "php"
@@ -90,20 +93,20 @@ metadata:
   labels:
     app: wordpress
     tier: frontend
-    deployment: wordpress
+    group: interscalar-com
 spec:
   replicas: 1
   selector:
     matchLabels:
       app: wordpress
       tier: frontend
-      deployment: wordpress
+      group: interscalar-com
   template:
     metadata:
       labels:
         app: wordpress
         tier: frontend
-        deployment: wordpress
+        group: interscalar-com
     spec:
       containers:
       - image: <vars.wordpress.image.name>:<vars.wordpress.image.version>
@@ -129,7 +132,7 @@ spec:
         - name: PHP_MEMORY_LIMIT_MB
           value: "<vars.wordpress.php.memoryLimit_MB>"
         - name: PHP_MAX_EXECUTION_TIME
-          value: "<vars.wordpress.php.maxExecutionTime_s>"
+          value: "<vars.wordpress.php.maxExecutionTime>"
         - name: PHP_FPM_MAX_CHILDREN
           value: "<vars.piwik.php.maxChildren>"
         - name: PHP_FPM_START_SERVERS
@@ -156,8 +159,14 @@ spec:
       - image: <vars.nginx.image.name>:<vars.nginx.image.version>
         name: nginx
         ports:
-        - containerPort: 9090
+        - containerPort: 8080
           name: "http"
+        livenessProbe:
+          httpGet:
+            path: /ping
+            port: 8080
+          initialDelaySeconds: 60
+          periodSeconds: 60
         resources:
           limits:
             cpu: <vars.nginx.limits.cpu>
@@ -170,16 +179,6 @@ spec:
           name: wordpress-wordpress-data
         - mountPath: /nginx-in
           name: nginx-nginx-config
-      - image: gcr.io/google_containers/liveness
-        name: liveness
-        args:
-        - /server
-        livenessProbe:
-          httpGet:
-            path: /ping
-            port: 9090
-          initialDelaySeconds: 30
-          periodSeconds: 3
       restartPolicy: Always
       volumes:
       - name: wordpress-wordpress-data
@@ -188,6 +187,8 @@ spec:
       - name: nginx-nginx-config
         configMap:
           name: nginx
+<affinitiesGroup(parent, vars)>
+<tolerationsGroup(parent, vars)>
 
 ---
 

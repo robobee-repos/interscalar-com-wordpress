@@ -1,8 +1,8 @@
 /*
  * Mandatory:
- * 
+ *
  * vars.nginx.hosts
- * vars.nginx.clientMaxBodySize_m
+ * vars.nginx.clientMaxBodySize
  *
  */
 xx-wordpress-ingress-yaml(parent, vars) ::= <<
@@ -18,7 +18,7 @@ metadata:
   annotations:
     kubernetes.io/ingress.class: "nginx"
     kubernetes.io/tls-acme: "true"
-    ingress.kubernetes.io/proxy-body-size: <vars.nginx.clientMaxBodySize_m>m
+    ingress.kubernetes.io/proxy-body-size: <vars.nginx.clientMaxBodySize>
     ingress.kubernetes.io/affinity: "cookie"
 spec:
   tls:
@@ -37,5 +37,5 @@ hostRule(host) ::= <<
       - path: /
         backend:
           serviceName: wordpress
-          servicePort: 9090
+          servicePort: 8080
 >>

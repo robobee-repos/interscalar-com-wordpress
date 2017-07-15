@@ -1,6 +1,7 @@
 /*
-*
-*/
+ *
+ */
+
 aa-namespace-yaml(parent, vars) ::= <<
 kind: Namespace
 apiVersion: v1
@@ -8,5 +9,6 @@ metadata:
   name: interscalar-com
   labels:
     name: interscalar-com
+    group: interscalar-com
 
 >>
