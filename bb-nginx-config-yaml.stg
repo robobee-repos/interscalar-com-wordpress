@@ -82,8 +82,8 @@ data:
                 fastcgi_index  index.php;
                 fastcgi_param PATH_TRANSLATED $document_root$fastcgi_script_name;
                 include        fastcgi_params;
-                fastcgi_read_timeout <vars.piwik.php.maxExecutionTime>;
-                fastcgi_send_timeout <vars.piwik.php.maxExecutionTime>;
+                fastcgi_read_timeout <vars.wordpress.php.maxExecutionTime>;
+                fastcgi_send_timeout <vars.wordpress.php.maxExecutionTime>;
             }
             #
             location ~* \.(js|css|png|jpg|jpeg|gif|ico)$ {
