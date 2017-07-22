@@ -40,7 +40,6 @@ data:
         gzip  on;
         index index.php index.html index.htm;
         client_max_body_size <vars.nginx.clientMaxBodySize>;
-<rest(vars.nginx.hosts):redirectHost(parent, vars);separator="\n">
         server {
             listen 8080 default_server;
             listen [::]:8080 default_server;
