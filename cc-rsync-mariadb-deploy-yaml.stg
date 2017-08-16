@@ -68,7 +68,7 @@ spec:
             memory: <vars.rsync.requests.memory>
         volumeMounts:
         - mountPath: /data
-          name: interscalar-com
+          name: mariadb-mariadb-data
       restartPolicy: Always
       volumes:
       - name: mariadb-mariadb-data
