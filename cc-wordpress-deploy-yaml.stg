@@ -13,6 +13,8 @@
  * vars.wordpress.php.startServers
  * vars.wordpress.php.minSpareServers
  * vars.wordpress.php.maxSpareServers
+ * vars.wordpress.php.opcacheEnable
+ * vars.wordpress.php.opcacheEnableCLI
  * vars.wordpress.php.opcacheMemoryConsumption_MB
  * vars.nginx.image.name
  * vars.nginx.image.version
@@ -127,22 +129,26 @@ spec:
             secretKeyRef:
               name: db
               key: wordpress_password
+        - name: PHP_MEMORY_LIMIT_MB
+          value: "<vars.owncloud.php.memoryLimit_MB>"
+        - name: PHP_MAX_EXECUTION_TIME
+          value: "<vars.owncloud.php.maxExecutionTime>"
+        - name: PHP_FPM_MAX_CHILDREN
+          value: "<vars.owncloud.php.maxChildren>"
+        - name: PHP_FPM_START_SERVERS
+          value: "<vars.owncloud.php.startServers>"
+        - name: PHP_FPM_MIN_SPARE_SERVERS
+          value: "<vars.owncloud.php.minSpareServers>"
+        - name: PHP_FPM_MAX_SPARE_SERVERS
+          value: "<vars.owncloud.php.maxSpareServers>"
+        - name: PHP_OPCACHE_ENABLE
+          value: "<vars.owncloud.php.opcacheEnable>"
+        - name: PHP_OPCACHE_ENABLE_CLI
+          value: "<vars.owncloud.php.opcacheEnableCLI>"
+        - name: PHP_OPCACHE_MEMORY_CONSUMPTION_MB
+          value: "<vars.owncloud.php.opcacheMemoryConsumption_MB>"
         - name: WORDPRESS_DB_HOST
           value: "db:3306"
-        - name: PHP_MEMORY_LIMIT_MB
-          value: "<vars.wordpress.php.memoryLimit_MB>"
-        - name: PHP_MAX_EXECUTION_TIME
-          value: "<vars.wordpress.php.maxExecutionTime>"
-        - name: PHP_FPM_MAX_CHILDREN
-          value: "<vars.wordpress.php.maxChildren>"
-        - name: PHP_FPM_START_SERVERS
-          value: "<vars.wordpress.php.startServers>"
-        - name: PHP_FPM_MIN_SPARE_SERVERS
-          value: "<vars.wordpress.php.minSpareServers>"
-        - name: PHP_FPM_MAX_SPARE_SERVERS
-          value: "<vars.wordpress.php.maxSpareServers>"
-        - name: PHP_OPCACHE_MEMORY_CONSUMPTION_MB
-          value: "<vars.wordpress.php.opcacheMemoryConsumption_MB>"
         ports:
         - containerPort: 9000
           name: "php"
