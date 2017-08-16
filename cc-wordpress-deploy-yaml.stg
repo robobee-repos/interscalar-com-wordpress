@@ -130,23 +130,23 @@ spec:
               name: db
               key: wordpress_password
         - name: PHP_MEMORY_LIMIT_MB
-          value: "<vars.owncloud.php.memoryLimit_MB>"
+          value: "<vars.wordpress.php.memoryLimit_MB>"
         - name: PHP_MAX_EXECUTION_TIME
-          value: "<vars.owncloud.php.maxExecutionTime>"
+          value: "<vars.wordpress.php.maxExecutionTime>"
         - name: PHP_FPM_MAX_CHILDREN
-          value: "<vars.owncloud.php.maxChildren>"
+          value: "<vars.wordpress.php.maxChildren>"
         - name: PHP_FPM_START_SERVERS
-          value: "<vars.owncloud.php.startServers>"
+          value: "<vars.wordpress.php.startServers>"
         - name: PHP_FPM_MIN_SPARE_SERVERS
-          value: "<vars.owncloud.php.minSpareServers>"
+          value: "<vars.wordpress.php.minSpareServers>"
         - name: PHP_FPM_MAX_SPARE_SERVERS
-          value: "<vars.owncloud.php.maxSpareServers>"
+          value: "<vars.wordpress.php.maxSpareServers>"
         - name: PHP_OPCACHE_ENABLE
-          value: "<vars.owncloud.php.opcacheEnable>"
+          value: "<vars.wordpress.php.opcacheEnable>"
         - name: PHP_OPCACHE_ENABLE_CLI
-          value: "<vars.owncloud.php.opcacheEnableCLI>"
+          value: "<vars.wordpress.php.opcacheEnableCLI>"
         - name: PHP_OPCACHE_MEMORY_CONSUMPTION_MB
-          value: "<vars.owncloud.php.opcacheMemoryConsumption_MB>"
+          value: "<vars.wordpress.php.opcacheMemoryConsumption_MB>"
         - name: WORDPRESS_DB_HOST
           value: "db:3306"
         ports:
