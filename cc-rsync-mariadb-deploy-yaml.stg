@@ -17,18 +17,18 @@ apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
   name: rsync-mariadb
-  namespace: cloud-muellerpublic-de
+  namespace: interscalar-com
   labels:
     app: rsync-mariadb
     tier: backup
-    group: cloud-muellerpublic-de
+    group: interscalar-com
 spec:
   replicas: 0
   selector:
     matchLabels:
       app: rsync-mariadb
       tier: backup
-      group: cloud-muellerpublic-de
+      group: interscalar-com
   strategy:
     type: Recreate
   template:
@@ -36,7 +36,7 @@ spec:
       labels:
         app: rsync-mariadb
         tier: backup
-        group: cloud-muellerpublic-de
+        group: interscalar-com
     spec:
       containers:
       - image: <vars.rsync.image.name>:<vars.rsync.image.version>
@@ -68,13 +68,13 @@ spec:
             memory: <vars.rsync.requests.memory>
         volumeMounts:
         - mountPath: /data
-          name: cloud-muellerpublic-de
+          name: interscalar-com
           subPath: mariadb
       restartPolicy: Always
       volumes:
-      - name: cloud-muellerpublic-de
+      - name: interscalar-com
         persistentVolumeClaim:
-          claimName: cloud-muellerpublic-de
+          claimName: interscalar-com
 <affinitiesGroup(parent, vars)>
 <tolerationsGroup(parent, vars)>
 
