@@ -71,9 +71,9 @@ spec:
           name: interscalar-com
       restartPolicy: Always
       volumes:
-      - name: interscalar-com
+      - name: mariadb-mariadb-data
         persistentVolumeClaim:
-          claimName: interscalar-com
+          claimName: mariadb-mariadb-data
 <affinitiesGroup(parent, vars)>
 <tolerationsGroup(parent, vars)>
 
