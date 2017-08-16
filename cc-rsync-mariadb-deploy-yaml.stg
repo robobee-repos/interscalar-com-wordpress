@@ -69,7 +69,6 @@ spec:
         volumeMounts:
         - mountPath: /data
           name: interscalar-com
-          subPath: mariadb
       restartPolicy: Always
       volumes:
       - name: interscalar-com
