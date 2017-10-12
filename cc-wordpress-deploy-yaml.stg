@@ -179,9 +179,9 @@ spec:
           name: nginx-nginx-config
       restartPolicy: Always
       volumes:
-      - name: interscalar-com
+      - name: html
         persistentVolumeClaim:
-          claimName: html
+          claimName: interscalar-com
       - name: nginx-nginx-config
         configMap:
           name: nginx
