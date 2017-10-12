@@ -72,6 +72,9 @@ spec:
         - mountPath: /data
           name: db
           subPath: db
+        - mountPath: /mariadb_logs
+          name: db
+          subPath: db_logs
       restartPolicy: Always
       volumes:
       - name: db

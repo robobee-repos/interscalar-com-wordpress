@@ -105,6 +105,9 @@ spec:
         - mountPath: /bitnami/mariadb
           name: db
           subPath: db
+        - mountPath: /opt/bitnami/mariadb/logs
+          name: db
+          subPath: db_logs
 <readinessProbe(parent, vars)>
       restartPolicy: Always
       volumes:
