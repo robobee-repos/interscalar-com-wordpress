@@ -104,6 +104,7 @@ spec:
         volumeMounts:
         - mountPath: /bitnami/mariadb
           name: db
+          subPath: db
 <readinessProbe(parent, vars)>
       restartPolicy: Always
       volumes:
