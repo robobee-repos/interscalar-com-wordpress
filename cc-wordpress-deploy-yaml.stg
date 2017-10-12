@@ -23,35 +23,19 @@
  * vars.nginx.requests.cpu
  * vars.nginx.requests.memory
  */
-
 import "affinities.stg"
 import "tolerations.stg"
 
+/*
+ *
+ */
 cc-wordpress-deploy-yaml(parent, vars) ::= <<
 
 ---
 
 apiVersion: v1
-kind: PersistentVolumeClaim
-metadata:
-  name: wordpress-wordpress-data
-  namespace: interscalar-com
-  labels:
-    app: wordpress
-    tier: frontend
-    group: interscalar-com
-spec:
-  accessModes:
-  - ReadWriteMany
-  resources:
-    requests:
-      storage: 2Gi
-
----
-
-apiVersion: v1
 kind: Service
-metadata:
+metahtml:
   name: wordpress
   namespace: interscalar-com
   labels:
@@ -70,7 +54,7 @@ spec:
 
 apiVersion: v1
 kind: Service
-metadata:
+metahtml:
   name: wordpress-php
   namespace: interscalar-com
   labels:
@@ -89,7 +73,7 @@ spec:
 
 apiVersion: extensions/v1beta1
 kind: Deployment
-metadata:
+metahtml:
   name: wordpress
   namespace: interscalar-com
   labels:
@@ -104,7 +88,7 @@ spec:
       tier: frontend
       group: interscalar-com
   template:
-    metadata:
+    metahtml:
       labels:
         app: wordpress
         tier: frontend
@@ -161,7 +145,8 @@ spec:
             memory: <vars.wordpress.requests.memory>
         volumeMounts:
         - mountPath: /var/www/html
-          name: wordpress-wordpress-data
+          name: html
+          subPath: html
       - image: <vars.nginx.image.name>:<vars.nginx.image.version>
         name: nginx
         ports:
@@ -188,14 +173,15 @@ spec:
             memory: <vars.nginx.requests.memory>
         volumeMounts:
         - mountPath: /var/www/html
-          name: wordpress-wordpress-data
+          name: html
+          subPath: html
         - mountPath: /nginx-in
           name: nginx-nginx-config
       restartPolicy: Always
       volumes:
-      - name: wordpress-wordpress-data
+      - name: interscalar-com
         persistentVolumeClaim:
-          claimName: wordpress-wordpress-data
+          claimName: html
       - name: nginx-nginx-config
         configMap:
           name: nginx

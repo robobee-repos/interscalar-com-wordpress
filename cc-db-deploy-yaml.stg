@@ -11,6 +11,9 @@ import "maradns_probe.stg"
 import "affinities.stg"
 import "tolerations.stg"
 
+/*
+ *
+ */
 cc-db-deploy-yaml(parent, vars) ::= <<
 
 ---
@@ -31,24 +34,6 @@ spec:
     targetPort: 3306
   selector:
     app: mariadb
-
----
-
-apiVersion: v1
-kind: PersistentVolumeClaim
-metadata:
-  name: mariadb-mariadb-data
-  namespace: interscalar-com
-  labels:
-    app: mariadb
-    tier: backend
-    group: interscalar-com
-spec:
-  accessModes:
-  - ReadWriteOnce
-  resources:
-    requests:
-      storage: 100Mi
 
 ---
 
@@ -118,13 +103,13 @@ spec:
             memory: <vars.db.requests.memory>
         volumeMounts:
         - mountPath: /bitnami/mariadb
-          name: mariadb-mariadb-data
+          name: db
 <readinessProbe(parent, vars)>
       restartPolicy: Always
       volumes:
-      - name: mariadb-mariadb-data
+      - name: db
         persistentVolumeClaim:
-          claimName: mariadb-mariadb-data
+          claimName: interscalar-com
 <affinitiesGroup(parent, vars)>
 <tolerationsGroup(parent, vars)>
 

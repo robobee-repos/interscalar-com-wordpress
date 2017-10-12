@@ -1,9 +1,16 @@
 /*
  *
  */
-
 affinitiesGroup(parent, vars) ::= <<
       affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+            - matchExpressions:
+              - key: muellerpublic.de/role
+                operator: In
+                values:
+                - web
         nodeAffinity:
           preferredDuringSchedulingIgnoredDuringExecution:
             - weight: 10

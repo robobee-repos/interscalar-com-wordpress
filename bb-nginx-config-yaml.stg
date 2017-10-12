@@ -7,7 +7,6 @@
 * vars.nginx.clientMaxBodySize
 * vars.wordpress.php.maxExecutionTime
 */
-
 bb-nginx-config-yaml(parent, vars) ::= <<
 apiVersion: v1
 kind: ConfigMap

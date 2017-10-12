@@ -8,10 +8,12 @@
  * vars.rsync.requests.cpu
  * vars.rsync.requests.memory
  */
-
 import "affinities.stg"
 import "tolerations.stg"
 
+/*
+ *
+ */
 cc-rsync-mariadb-deploy-yaml(parent, vars) ::= <<
 apiVersion: extensions/v1beta1
 kind: Deployment
@@ -68,12 +70,13 @@ spec:
             memory: <vars.rsync.requests.memory>
         volumeMounts:
         - mountPath: /data
-          name: mariadb-mariadb-data
+          name: db
+          subPath: db
       restartPolicy: Always
       volumes:
-      - name: mariadb-mariadb-data
+      - name: db
         persistentVolumeClaim:
-          claimName: mariadb-mariadb-data
+          claimName: interscalar-com
 <affinitiesGroup(parent, vars)>
 <tolerationsGroup(parent, vars)>
 

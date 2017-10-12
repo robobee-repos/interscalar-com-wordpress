@@ -1,7 +1,6 @@
 /*
  *
  */
-
 readinessProbe(parent, vars) ::= <<
         livenessProbe:
           tcpSocket:

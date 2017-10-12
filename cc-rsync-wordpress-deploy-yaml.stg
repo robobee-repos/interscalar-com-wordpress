@@ -12,6 +12,9 @@
 import "affinities.stg"
 import "tolerations.stg"
 
+/*
+ *
+ */
 cc-rsync-wordpress-deploy-yaml(parent, vars) ::= <<
 apiVersion: extensions/v1beta1
 kind: Deployment
@@ -68,12 +71,13 @@ spec:
             memory: <vars.rsync.requests.memory>
         volumeMounts:
         - mountPath: /html
-          name: wordpress-wordpress-data
+          name: html
+          subPath: html
       restartPolicy: Always
       volumes:
-      - name: wordpress-wordpress-data
+      - name: html
         persistentVolumeClaim:
-          claimName: wordpress-wordpress-data
+          claimName: interscalar-com
 <affinitiesGroup(parent, vars)>
 <tolerationsGroup(parent, vars)>
 
