@@ -35,7 +35,7 @@ cc-wordpress-deploy-yaml(parent, vars) ::= <<
 
 apiVersion: v1
 kind: Service
-metahtml:
+metadata:
   name: wordpress
   namespace: interscalar-com
   labels:
@@ -54,7 +54,7 @@ spec:
 
 apiVersion: v1
 kind: Service
-metahtml:
+metadata:
   name: wordpress-php
   namespace: interscalar-com
   labels:
@@ -73,7 +73,7 @@ spec:
 
 apiVersion: extensions/v1beta1
 kind: Deployment
-metahtml:
+metadata:
   name: wordpress
   namespace: interscalar-com
   labels:
@@ -88,7 +88,7 @@ spec:
       tier: frontend
       group: interscalar-com
   template:
-    metahtml:
+    metadata:
       labels:
         app: wordpress
         tier: frontend
