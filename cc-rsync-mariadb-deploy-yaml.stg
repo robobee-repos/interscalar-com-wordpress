@@ -69,6 +69,8 @@ spec:
             cpu: <vars.rsync.requests.cpu>
             memory: <vars.rsync.requests.memory>
         volumeMounts:
+        - mountPath: /data-old
+          name: db
         - mountPath: /data
           name: db
           subPath: db
