@@ -11,14 +11,14 @@
 
 resourcesGroup(parent, vars, limits, requests) ::= <<
           resources:
-<if(vars.nanny.limits)>
+<if(limits)>
             limits:
-              <if(vars.nanny.limits.cpu)>cpu: <vars.nanny.limits.cpu><endif>
-              <if(vars.nanny.limits.memory)>memory: <vars.nanny.limits.memory><endif>
+              <if(limits.cpu)>cpu: <limits.cpu><endif>
+              <if(limits.memory)>memory: <limits.memory><endif>
 <endif>
-<if(vars.nanny.requests)>
+<if(requests)>
             requests:
-              <if(vars.nanny.requests.cpu)>cpu: <vars.nanny.requests.cpu><endif>
-              <if(vars.nanny.requests.memory)>memory: <vars.nanny.requests.memory><endif>
+              <if(requests.cpu)>cpu: <requests.cpu><endif>
+              <if(requests.memory)>memory: <requests.memory><endif>
 <endif>
 >>
