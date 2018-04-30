@@ -12,7 +12,7 @@
  */
 affinitiesGroup(parent, vars, affinity) ::= <<
 <if(vars.db.affinity)>
-      <affinitiesGroup(parent, vars, vars.db.affinity)>
+      <affinitiesSection(parent, vars, vars.db.affinity)>
 <endif>
 >>
 
