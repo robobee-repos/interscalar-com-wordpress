@@ -1,7 +1,7 @@
 /*
  *
  */
-readinessProbe(parent, vars) ::= <<
+readinessProbeGroup(parent, vars) ::= <<
         livenessProbe:
           tcpSocket:
             port: 3306

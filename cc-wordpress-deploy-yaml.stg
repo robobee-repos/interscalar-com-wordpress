@@ -3,28 +3,42 @@
  *
  * vars.wordpress.image.name
  * vars.wordpress.image.version
- * vars.wordpress.limits.cpu
- * vars.wordpress.limits.memory
- * vars.wordpress.requests.cpu
- * vars.wordpress.requests.memory
- * vars.wordpress.php.memoryLimit_MB
+ * vars.wordpress.php.memoryLimit
  * vars.wordpress.php.maxExecutionTime
  * vars.wordpress.php.maxChildren
  * vars.wordpress.php.startServers
  * vars.wordpress.php.minSpareServers
  * vars.wordpress.php.maxSpareServers
+ * vars.wordpress.php.slowlogTimeout
+ * vars.wordpress.php.catchWorkersOutput
  * vars.wordpress.php.opcacheEnable
  * vars.wordpress.php.opcacheEnableCLI
- * vars.wordpress.php.opcacheMemoryConsumption_MB
+ * vars.wordpress.php.opcacheMemoryConsumption
  * vars.nginx.image.name
  * vars.nginx.image.version
+ * 
+ * Optional:
+ *
+ * vars.wordpress.limits.cpu
+ * vars.wordpress.limits.memory
+ * vars.wordpress.requests.cpu
+ * vars.wordpress.requests.memory
  * vars.nginx.limits.cpu
  * vars.nginx.limits.memory
  * vars.nginx.requests.cpu
  * vars.nginx.requests.memory
+ * vars.wordpress.affinity.key
+ * vars.wordpress.affinity.name
+ * vars.wordpress.affinity.required
+ * vars.wordpress.allowOnMaster
+ * vars.wordpress.tolerations[].effect
+ * vars.wordpress.tolerations[].key
+ * vars.wordpress.tolerations[].value
  */
-import "affinities.stg"
-import "tolerations.stg"
+
+import "_affinities.stg"
+import "_resources.stg"
+import "_tolerations.stg"
 
 /*
  *
@@ -113,8 +127,8 @@ spec:
             secretKeyRef:
               name: db
               key: wordpress_password
-        - name: PHP_MEMORY_LIMIT_MB
-          value: "<vars.wordpress.php.memoryLimit_MB>"
+        - name: PHP_MEMORY_LIMIT
+          value: "<vars.wordpress.php.memoryLimit>"
         - name: PHP_MAX_EXECUTION_TIME
           value: "<vars.wordpress.php.maxExecutionTime>"
         - name: PHP_FPM_MAX_CHILDREN
@@ -125,24 +139,24 @@ spec:
           value: "<vars.wordpress.php.minSpareServers>"
         - name: PHP_FPM_MAX_SPARE_SERVERS
           value: "<vars.wordpress.php.maxSpareServers>"
+        - name: PHP_FPM_MAX_REQUESTS
+          value: "<vars.wordpress.php.maxRequests>"
+        - name: PHP_FPM_REQUEST_SLOWLOG_TIMEOUT
+          value: "<vars.wordpress.php.slowlogTimeout>"
+        - name: PHP_FPM_CATCH_WORKERS_OUTPUT
+          value: "<vars.wordpress.php.catchWorkersOutput>"
         - name: PHP_OPCACHE_ENABLE
           value: "<vars.wordpress.php.opcacheEnable>"
         - name: PHP_OPCACHE_ENABLE_CLI
           value: "<vars.wordpress.php.opcacheEnableCLI>"
-        - name: PHP_OPCACHE_MEMORY_CONSUMPTION_MB
-          value: "<vars.wordpress.php.opcacheMemoryConsumption_MB>"
+        - name: PHP_OPCACHE_MEMORY_CONSUMPTION
+          value: "<vars.wordpress.php.opcacheMemoryConsumption>"
         - name: WORDPRESS_DB_HOST
           value: "db:3306"
         ports:
         - containerPort: 9000
           name: "php"
-        resources:
-          limits:
-            cpu: <vars.wordpress.limits.cpu>
-            memory: <vars.wordpress.limits.memory>
-          requests:
-            cpu: <vars.wordpress.requests.cpu>
-            memory: <vars.wordpress.requests.memory>
+<resourcesGroup(parent, vars, vars.wordpress.limits, vars.wordpress.requests)>
         volumeMounts:
         - mountPath: /var/www/html
           name: html
@@ -164,13 +178,7 @@ spec:
             port: 8080
           initialDelaySeconds: 60
           periodSeconds: 60
-        resources:
-          limits:
-            cpu: <vars.nginx.limits.cpu>
-            memory: <vars.nginx.limits.memory>
-          requests:
-            cpu: <vars.nginx.requests.cpu>
-            memory: <vars.nginx.requests.memory>
+<resourcesGroup(parent, vars, vars.nginx.limits, vars.nginx.requests)>
         volumeMounts:
         - mountPath: /var/www/html
           name: html
@@ -185,8 +193,9 @@ spec:
       - name: nginx-nginx-config
         configMap:
           name: nginx
-<affinitiesGroup(parent, vars)>
-<tolerationsGroup(parent, vars)>
+<tolerationMasterGroup(parent, vars, vars.wordpress.allowOnMaster)>
+<tolerationsGroup(parent, vars, vars.wordpress.tolerations, vars.wordpress.allowOnMaster)>
+<affinitiesGroup(parent, vars, vars.wordpress.affinity)>
 
 ---
 

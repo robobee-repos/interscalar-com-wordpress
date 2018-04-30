@@ -1,0 +1,24 @@
+/*
+ * Adds resources group section.
+ *
+ * Optional:
+ *
+ * limits.cpu
+ * limits.memory
+ * requests.cpu
+ * requests.memory
+ */
+
+resourcesGroup(parent, vars, limits, requests) ::= <<
+          resources:
+<if(vars.nanny.limits)>
+            limits:
+              <if(vars.nanny.limits.cpu)>cpu: <vars.nanny.limits.cpu><endif>
+              <if(vars.nanny.limits.memory)>memory: <vars.nanny.limits.memory><endif>
+<endif>
+<if(vars.nanny.requests)>
+            requests:
+              <if(vars.nanny.requests.cpu)>cpu: <vars.nanny.requests.cpu><endif>
+              <if(vars.nanny.requests.memory)>memory: <vars.nanny.requests.memory><endif>
+<endif>
+>>

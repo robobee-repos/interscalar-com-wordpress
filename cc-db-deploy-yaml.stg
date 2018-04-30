@@ -1,15 +1,28 @@
 /*
  * Mandatory:
  *
+ * vars.db.image.name
+ * vars.db.image.version
+ *
+ * Optional:
+ *
  * vars.db.limits.cpu
  * vars.db.limits.memory
  * vars.db.requests.cpu
  * vars.db.requests.memory
+ * vars.db.affinity.key
+ * vars.db.affinity.name
+ * vars.db.affinity.required
+ * vars.db.allowOnMaster
+ * vars.db.tolerations[].effect
+ * vars.db.tolerations[].key
+ * vars.db.tolerations[].value
  */
 
-import "maradns_probe.stg"
-import "affinities.stg"
-import "tolerations.stg"
+import "_maradns_probe.stg"
+import "_affinities.stg"
+import "_resources.stg"
+import "_tolerations.stg"
 
 /*
  *
@@ -61,7 +74,7 @@ spec:
         group: interscalar-com
     spec:
       containers:
-      - image: bitnami/mariadb:latest
+      - image: <vars.db.image.name>:<vars.db.image.version>
         name: mariadb
         env:
         - name: ALLOW_EMPTY_PASSWORD
@@ -94,13 +107,7 @@ spec:
         ports:
         - containerPort: 3306
           name: "mysql"
-        resources:
-          limits:
-            cpu: <vars.db.limits.cpu>
-            memory: <vars.db.limits.memory>
-          requests:
-            cpu: <vars.db.requests.cpu>
-            memory: <vars.db.requests.memory>
+<resourcesGroup(parent, vars, vars.db.limits, vars.db.requests)>
         volumeMounts:
         - mountPath: /bitnami/mariadb
           name: db
@@ -108,14 +115,15 @@ spec:
         - mountPath: /opt/bitnami/mariadb/logs
           name: db
           subPath: db_logs
-<readinessProbe(parent, vars)>
+<readinessProbeGroup(parent, vars)>
       restartPolicy: Always
       volumes:
       - name: db
         persistentVolumeClaim:
           claimName: interscalar-com
-<affinitiesGroup(parent, vars)>
-<tolerationsGroup(parent, vars)>
+<tolerationMasterGroup(parent, vars, vars.db.allowOnMaster)>
+<tolerationsGroup(parent, vars, vars.db.tolerations, vars.db.allowOnMaster)>
+<affinitiesGroup(parent, vars, vars.db.affinity)>
 
 ---
 

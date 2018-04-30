@@ -1,12 +1,13 @@
 /*
-* Mandatory:
-*
-* vars.nginx.hosts[]
-* vars.nginx.workerProcesses
-* vars.nginx.workerConnections
-* vars.nginx.clientMaxBodySize
-* vars.wordpress.php.maxExecutionTime
-*/
+ * Mandatory:
+ *
+ * vars.nginx.hosts[]
+ * vars.nginx.workerProcesses
+ * vars.nginx.workerConnections
+ * vars.nginx.clientMaxBodySize
+ * vars.wordpress.php.maxExecutionTime
+ */
+
 bb-nginx-config-yaml(parent, vars) ::= <<
 apiVersion: v1
 kind: ConfigMap
