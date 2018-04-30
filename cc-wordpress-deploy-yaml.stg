@@ -192,7 +192,7 @@ spec:
           claimName: interscalar-com
       - name: nginx-nginx-config
         configMap:
-          name: nginx
+          name: nginx-<vars.nginx.revision>
 <tolerationMasterGroup(parent, vars, vars.wordpress.allowOnMaster)>
 <tolerationsGroup(parent, vars, vars.wordpress.tolerations, vars.wordpress.allowOnMaster)>
 <affinitiesGroup(parent, vars, vars.wordpress.affinity)>
