@@ -33,11 +33,11 @@ data:
                           '$status $body_bytes_sent "$http_referer" '
                           '"$http_user_agent" "$http_x_forwarded_for"';
         access_log  /var/log/nginx/access.log  main;
-        sendfile        on;
-        tcp_nopush     on;
+        sendfile        off;
+        tcp_nopush     off;
         tcp_nodelay on;
         keepalive_timeout  65;
-        gzip  on;
+        gzip  off;
         index index.php index.html index.htm;
         client_max_body_size <vars.nginx.clientMaxBodySize>;
 <rest(vars.nginx.hosts):redirectHost(parent, vars);separator="\n">
