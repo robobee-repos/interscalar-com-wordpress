@@ -77,25 +77,25 @@ data:
             }
             # pass the PHP scripts to FastCGI server listening on 127.0.0.1:9000
             #
-            location ~ \.php$ {
-                fastcgi_pass   localhost:9000;
-                fastcgi_index  index.php;
-                fastcgi_param PATH_TRANSLATED $document_root$fastcgi_script_name;
-                include        fastcgi_params;
-                fastcgi_read_timeout <vars.wordpress.php.maxExecutionTime>;
-                fastcgi_send_timeout <vars.wordpress.php.maxExecutionTime>;
-            }
+#location ~ \.php$ {
+#fastcgi_pass   localhost:9000;
+#fastcgi_index  index.php;
+#fastcgi_param PATH_TRANSLATED $document_root$fastcgi_script_name;
+#include        fastcgi_params;
+#fastcgi_read_timeout <vars.wordpress.php.maxExecutionTime>;
+#fastcgi_send_timeout <vars.wordpress.php.maxExecutionTime>;
+#}
             #
             location ~* \.(js|css|png|jpg|jpeg|gif|ico)$ {
                     expires max;
                     log_not_found off;
             }
             # php-fpm ping and status.
-            location ~ ^/(phpstatus|ping)$ {
-                fastcgi_pass   localhost:9000;
-                fastcgi_param PATH_TRANSLATED $document_root$fastcgi_script_name;
-                include        fastcgi_params;
-            }
+#location ~ ^/(phpstatus|ping)$ {
+#fastcgi_pass   localhost:9000;
+#fastcgi_param PATH_TRANSLATED $document_root$fastcgi_script_name;
+#include        fastcgi_params;
+#}
         }
     }
 
