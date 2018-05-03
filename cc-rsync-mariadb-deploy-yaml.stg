@@ -70,7 +70,7 @@ spec:
           exec:
             command:
             - /readiness.sh
-            - /data/conf/my.cnf
+            - /data/data/aria_log_control
           initialDelaySeconds: 5
           timeoutSeconds: 1
 <resourcesGroup(parent, vars, vars.rsync.limits, vars.rsync.requests)>
