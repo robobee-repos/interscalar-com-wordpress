@@ -63,6 +63,8 @@ spec:
               key: auth-key
         - name: USER
           value: "root"
+        - name: RSYNC_STRICT_HOST_KEY_CHECKING_NO
+          value: "true"
         ports:
         - containerPort: 2222
           name: ssh
