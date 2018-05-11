@@ -1,6 +1,7 @@
 /*
  * Mandatory:
  *
+ * vars.nginx.revision
  * vars.nginx.hosts[]
  * vars.nginx.workerProcesses
  * vars.nginx.workerConnections

@@ -16,6 +16,7 @@
  * vars.wordpress.php.opcacheMemoryConsumption
  * vars.nginx.image.name
  * vars.nginx.image.version
+ * vars.nginx.revision
  * 
  * Optional:
  *
