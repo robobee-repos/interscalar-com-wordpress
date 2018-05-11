@@ -42,6 +42,7 @@ spec:
   secretName: interscalar-com-tls
   issuerRef:
     name: letsencrypt-staging
+    kind: ClusterIssuer
   commonName: <first(vars.nginx.hosts)>
   dnsNames:
   <rest(vars.nginx.hosts):certDomain();separator="\n">
