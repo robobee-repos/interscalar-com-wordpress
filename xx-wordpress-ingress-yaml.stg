@@ -27,7 +27,7 @@ spec:
   tls:
   - hosts:
     <vars.nginx.hosts:{h|- <h>};separator="\n">
-    secretName: tls-secret
+    secretName: interscalar-com-tls
   rules:
 <vars.nginx.hosts:hostRule();separator="\n">
 
@@ -42,15 +42,15 @@ spec:
   secretName: interscalar-com-tls
   issuerRef:
     name: letsencrypt-staging
-  commonName: interscalar.com
+  commonName: <first(vars.nginx.hosts)>
   dnsNames:
-  - www.interscalar.com
+  <rest(vars.nginx.hosts):certDomain();separator="\n">
   acme:
     config:
     - http01:
         ingressClass: nginx
       domains:
-      - interscalar.com
+      <vars.nginx.hosts:certDomain();separator="\n">
       
 ---
 >>
@@ -63,4 +63,8 @@ hostRule(host) ::= <<
         backend:
           serviceName: wordpress
           servicePort: 8080
+>>
+
+certDomain(host) ::= <<
+- <host>
 >>

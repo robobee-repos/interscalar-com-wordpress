@@ -45,7 +45,7 @@ data:
             listen 8080 default_server;
             listen [::]:8080 default_server;
             root /var/www/html;
-            server_name <vars.nginx.hosts;separator=" ">;
+            server_name <first(vars.nginx.hosts)>;
             index index.php;
             #
             location = /favicon.ico {
