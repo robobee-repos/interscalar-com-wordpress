@@ -11,8 +11,8 @@
  * affinity.required
  */
 affinitiesGroup(parent, vars, affinity) ::= <<
-<if(vars.db.affinity)>
-      <affinitiesSection(parent, vars, vars.db.affinity)>
+<if(vars.affinity)>
+      <affinitiesSection(parent, vars, vars.affinity)>
 <endif>
 >>
 
