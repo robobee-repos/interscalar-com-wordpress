@@ -5,6 +5,7 @@
  * vars.nginx.clientMaxBodySize
  *
  */
+
 xx-wordpress-ingress-yaml(parent, vars) ::= <<
 ---
 
