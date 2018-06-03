@@ -1,6 +1,7 @@
 /*
  * Mandatory:
  *
+ * vars.hosts
  * vars.wordpress.image.name
  * vars.wordpress.image.version
  * vars.wordpress.revision
@@ -15,7 +16,6 @@
  * vars.wordpress.php.opcacheEnable
  * vars.wordpress.php.opcacheEnableCLI
  * vars.wordpress.php.opcacheMemoryConsumption
- * vars.wordpress.nginx.hosts
  * vars.nginx.image.name
  * vars.nginx.image.version
  * vars.nginx.workerProcesses

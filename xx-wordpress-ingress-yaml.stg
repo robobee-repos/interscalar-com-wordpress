@@ -1,7 +1,7 @@
 /*
  * Mandatory:
  *
- * vars.wordpress.nginx.hosts[]
+ * vars.hosts[]
  * vars.nginx.clientMaxBodySize
  *
  */
@@ -25,9 +25,9 @@ metadata:
     tier: frontend
     deployment: wordpress
   annotations:
-    <ingressDefaultAnnotations(parent, vars, vars.nginx)>
+    <ingressDefaultAnnotations(parent, vars, vars)>
 spec:
-  <ingressDefaultSpec(parent, vars, vars.wordpress.nginx, "wordpress-interscalar-com")>
+  <ingressDefaultSpec(parent, vars, vars.wordpress, "wordpress-interscalar-com")>
 
 ---
 
@@ -37,7 +37,7 @@ metadata:
   name: interscalar-com
   namespace: interscalar-com
 spec:
-  <certDefaultSpecProd(parent, vars, vars.wordpress.nginx, "wordpress-interscalar-com")>
+  <certDefaultSpecProd(parent, vars, vars, "wordpress-interscalar-com")>
 
 ---
 
