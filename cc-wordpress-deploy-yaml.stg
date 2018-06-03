@@ -99,11 +99,11 @@ data:
     <nginxDefaults(parent, vars, vars.nginx)>
     http {
         <nginxHttpDefaults(parent, vars, vars.nginx)>
-        <nginxVirtualHosts(parent, vars, vars.wordpress.nginx.hosts)>
+        <nginxVirtualHosts(parent, vars, vars.hosts)>
         server {
             listen 8080 default_server;
             listen [::]:8080 default_server;
-            server_name <first(vars.wordpress.nginx.hosts)>;
+            server_name <first(vars.hosts)>;
             root /var/www/html/public;
             index index.php;
             <nginxLocationFavicon(parent, vars)>
