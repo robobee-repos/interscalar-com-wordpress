@@ -104,7 +104,7 @@ data:
             listen 8080 default_server;
             listen [::]:8080 default_server;
             server_name <first(vars.hosts)>;
-            root /var/www/html/public;
+            root /var/www/html;
             index index.php;
             <nginxLocationFavicon(parent, vars)>
             <nginxLocationRobots(parent, vars)>
