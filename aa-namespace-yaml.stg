@@ -1,7 +1,6 @@
 /*
  *
  */
-
 aa-namespace-yaml(parent, vars) ::= <<
 kind: Namespace
 apiVersion: v1
