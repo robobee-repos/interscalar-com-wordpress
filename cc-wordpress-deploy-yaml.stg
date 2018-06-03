@@ -3,6 +3,7 @@
  *
  * vars.wordpress.image.name
  * vars.wordpress.image.version
+ * vars.wordpress.revision
  * vars.wordpress.php.memoryLimit
  * vars.wordpress.php.maxExecutionTime
  * vars.wordpress.php.maxChildren
@@ -247,7 +248,7 @@ spec:
           claimName: interscalar-com
       - name: nginx-nginx-config
         configMap:
-          name: nginx-<vars.wordpress.revision>
+          name: wordpress-nginx-<vars.wordpress.revision>
       <affinitiesGroup(parent, vars, vars.wordpress.affinity)>
       <tolerationMasterGroup(parent, vars, vars.wordpress.allowOnMaster)>
       <tolerationsGroup(parent, vars, vars.wordpress.tolerations, vars.wordpress.allowOnMaster)>
