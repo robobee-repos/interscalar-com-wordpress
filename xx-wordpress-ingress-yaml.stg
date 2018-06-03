@@ -27,7 +27,7 @@ metadata:
   annotations:
     <ingressDefaultAnnotations(parent, vars, vars)>
 spec:
-  <ingressDefaultSpec(parent, vars, vars.wordpress, "wordpress-interscalar-com")>
+  <ingressDefaultSpec(parent, vars, vars, "wordpress-interscalar-com")>
 
 ---
 
