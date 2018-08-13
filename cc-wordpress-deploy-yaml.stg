@@ -306,11 +306,17 @@ spec:
         - mountPath: /data
           name: html
           subPath: html
+        - mountPath: /data-1
+          name: data
+          subPath: html
       restartPolicy: Always
       volumes:
       - name: html
         persistentVolumeClaim:
           claimName: interscalar-com
+      - name: data
+        persistentVolumeClaim:
+          claimName: interscalar-com-1
       <affinitiesGroup(parent, vars, vars.wordpress.affinity)>
       <tolerationMasterGroup(parent, vars, vars.wordpress.allowOnMaster)>
       <tolerationsGroup(parent, vars, vars.wordpress.tolerations, vars.wordpress.allowOnMaster)>

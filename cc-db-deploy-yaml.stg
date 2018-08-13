@@ -190,11 +190,17 @@ spec:
         - mountPath: /mariadb_logs
           name: db
           subPath: db_logs
+        - mountPath: /data-1
+          name: data
+          subPath: db
       restartPolicy: Always
       volumes:
       - name: db
         persistentVolumeClaim:
           claimName: interscalar-com
+      - name: data
+        persistentVolumeClaim:
+          claimName: interscalar-com-1
       <affinitiesGroup(parent, vars, vars.db.affinity)>
       <tolerationMasterGroup(parent, vars, vars.db.allowOnMaster)>
       <tolerationsGroup(parent, vars, vars.db.tolerations, vars.db.allowOnMaster)>
