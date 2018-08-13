@@ -84,29 +84,24 @@ spec:
       - image: <vars.db.image.name>:<vars.db.image.version>
         name: mariadb
         env:
-        - name: ALLOW_EMPTY_PASSWORD
+        - name: MYSQL_ALLOW_EMPTY_PASSWORD
           value: "no"
-        - name: MARIADB_ROOT_USER
-          valueFrom:
-            secretKeyRef:
-              name: db
-              key: root_user
-        - name: MARIADB_ROOT_PASSWORD
+        - name: MYSQL_ROOT_PASSWORD
           valueFrom:
             secretKeyRef:
               name: db
               key: root_password
-        - name: MARIADB_DATABASE
+        - name: MYSQL_DATABASE
           valueFrom:
             secretKeyRef:
               name: db
               key: wordpress_db
-        - name: MARIADB_USER
+        - name: MYSQL_USER
           valueFrom:
             secretKeyRef:
               name: db
               key: wordpress_user
-        - name: MARIADB_PASSWORD
+        - name: MYSQL_PASSWORD
           valueFrom:
             secretKeyRef:
               name: db
@@ -117,17 +112,14 @@ spec:
         <readinessProbeGroup(parent, vars)>
         <resourcesGroup(parent, vars, vars.db)>
         volumeMounts:
-        - mountPath: /bitnami/mariadb
+        - mountPath: /var/lib/mysql
           name: db
           subPath: db
-        - mountPath: /opt/bitnami/mariadb/logs
-          name: db
-          subPath: db_logs
       restartPolicy: Always
       volumes:
       - name: db
         persistentVolumeClaim:
-          claimName: interscalar-com
+          claimName: interscalar-com-1
       <tolerationMasterGroup(parent, vars, vars.db.allowOnMaster)>
       <tolerationsGroup(parent, vars, vars.db.tolerations, vars.db.allowOnMaster)>
       <affinitiesGroup(parent, vars, vars.db.affinity)>
@@ -179,25 +171,16 @@ spec:
           exec:
             command:
             - /readiness.sh
-            - /data/data/aria_log_control
+            - /data/aria_log_control
           initialDelaySeconds: 5
           timeoutSeconds: 1
         <resourcesGroup(parent, vars, vars.rsync)>
         volumeMounts:
         - mountPath: /data
-          name: db
-          subPath: db
-        - mountPath: /mariadb_logs
-          name: db
-          subPath: db_logs
-        - mountPath: /data-1
           name: data
           subPath: db
       restartPolicy: Always
       volumes:
-      - name: db
-        persistentVolumeClaim:
-          claimName: interscalar-com
       - name: data
         persistentVolumeClaim:
           claimName: interscalar-com-1

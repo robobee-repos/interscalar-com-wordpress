@@ -1,7 +1,6 @@
 /*
  * Mandatory:
  *
- * vars.hosts
  * vars.wordpress.image.name
  * vars.wordpress.image.version
  * vars.wordpress.revision
@@ -16,6 +15,7 @@
  * vars.wordpress.php.opcacheEnable
  * vars.wordpress.php.opcacheEnableCLI
  * vars.wordpress.php.opcacheMemoryConsumption
+ * vars.wordpress.hosts[]
  * vars.nginx.image.name
  * vars.nginx.image.version
  * vars.nginx.workerProcesses
@@ -99,11 +99,11 @@ data:
     <nginxDefaults(parent, vars, vars.nginx)>
     http {
         <nginxHttpDefaults(parent, vars, vars.nginx)>
-        <nginxVirtualHosts(parent, vars, vars.hosts)>
+        <nginxVirtualHosts(parent, vars, vars.wordpress.hosts)>
         server {
             listen 8080 default_server;
             listen [::]:8080 default_server;
-            server_name <first(vars.hosts)>;
+            server_name <first(vars.wordpress.hosts)>;
             root /var/www/html;
             index index.php;
             <nginxLocationFavicon(parent, vars)>
@@ -245,7 +245,7 @@ spec:
       volumes:
       - name: html
         persistentVolumeClaim:
-          claimName: interscalar-com
+          claimName: interscalar-com-1
       - name: nginx-nginx-config
         configMap:
           name: wordpress-nginx-<vars.wordpress.revision>
@@ -304,16 +304,10 @@ spec:
         <resourcesGroup(parent, vars, vars.rsync)>
         volumeMounts:
         - mountPath: /data
-          name: html
-          subPath: html
-        - mountPath: /data-1
           name: data
           subPath: html
       restartPolicy: Always
       volumes:
-      - name: html
-        persistentVolumeClaim:
-          claimName: interscalar-com
       - name: data
         persistentVolumeClaim:
           claimName: interscalar-com-1
