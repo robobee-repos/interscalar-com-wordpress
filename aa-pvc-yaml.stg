@@ -2,7 +2,6 @@
  * Mandatory:
  *
  * vars.volume.storage
- * vars.volume.class
  */
 
 /*
@@ -12,12 +11,8 @@ aa-pvc-yaml(parent, vars) ::= <<
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: interscalar-com-1
-  namespace: interscalar-com
-  labels:
-    group: interscalar-com
-  annotations:
-    volume.beta.kubernetes.io/storage-class: <vars.volume.class>
+  name: www-interscalar-com
+  namespace: www-interscalar-com
 spec:
   accessModes:
   - ReadWriteMany

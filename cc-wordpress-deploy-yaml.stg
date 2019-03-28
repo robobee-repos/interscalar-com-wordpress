@@ -70,7 +70,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: wordpress
-  namespace: interscalar-com
+  namespace: www-interscalar-com
   labels:
     app: wordpress
     tier: frontend
@@ -89,7 +89,7 @@ apiVersion: v1
 kind: ConfigMap
 metadata:
   name: wordpress-nginx-<vars.wordpress.revision>
-  namespace: interscalar-com
+  namespace: www-interscalar-com
   labels:
     app: nginx
     tier: frontend
@@ -125,7 +125,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: wordpress-php
-  namespace: interscalar-com
+  namespace: www-interscalar-com
   labels:
     app: wordpress
     tier: frontend
@@ -144,7 +144,7 @@ apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
   name: wordpress
-  namespace: interscalar-com
+  namespace: www-interscalar-com
   labels:
     app: wordpress
     tier: frontend
@@ -259,7 +259,7 @@ apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
   name: rsync-wordpress
-  namespace: interscalar-com
+  namespace: www-interscalar-com
   labels:
     app: rsync-wordpress
     tier: backup
