@@ -1,11 +1,17 @@
 /*
  * Mandatory:
  *
- * vars.nginx.hosts
+ * vars.wordpress.hosts[]
  * vars.nginx.clientMaxBodySize
  *
  */
 
+import "robobeerun-templates/_cert_config.stg"
+import "robobeerun-templates/_ingress_config.stg"
+
+/*
+ * 
+ */
 xx-wordpress-ingress-yaml(parent, vars) ::= <<
 ---
 
@@ -19,18 +25,13 @@ metadata:
     tier: frontend
     deployment: wordpress
   annotations:
-    kubernetes.io/ingress.class: "nginx"
-    nginx.ingress.kubernetes.io/affinity: "cookie"
-    nginx.ingress.kubernetes.io/session-cookie-name: "route"
-    nginx.ingress.kubernetes.io/session-cookie-hash: "sha1"
-    nginx.ingress.kubernetes.io/from-to-www-redirect: "true"
+    <ingressDefaultAnnotations(vars.nginx)>
 spec:
-  tls:
-  - hosts:
-    <vars.nginx.hosts:{h|- <h>};separator="\n">
-    secretName: interscalar-com-tls
-  rules:
-<vars.nginx.hosts:hostRule();separator="\n">
+  <ingressDefaultSpec(vars.wordpress, "wordpress-interscalar-com")>
+
+---
+
+<ingressService(vars.nginx, "wordpress-interscalar-com", "wordpress", "interscalar-com")>
 
 ---
 
@@ -40,33 +41,8 @@ metadata:
   name: interscalar-com
   namespace: interscalar-com
 spec:
-  secretName: interscalar-com-tls
-  issuerRef:
-    name: letsencrypt-prod
-    kind: ClusterIssuer
-  commonName: <first(vars.nginx.hosts)>
-  dnsNames:
-  <rest(vars.nginx.hosts):certDomain();separator="\n">
-  acme:
-    config:
-    - http01:
-        ingressClass: nginx
-      domains:
-      <vars.nginx.hosts:certDomain();separator="\n">
-      
+  <certDefaultSpecProd(vars.wordpress, "wordpress-interscalar-com")>
+
 ---
->>
 
-hostRule(host) ::= <<
-  - host: <host>
-    http:
-      paths:
-      - path: /
-        backend:
-          serviceName: wordpress
-          servicePort: 8080
->>
-
-certDomain(host) ::= <<
-- <host>
 >>

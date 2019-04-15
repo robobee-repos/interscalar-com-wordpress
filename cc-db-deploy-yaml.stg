@@ -3,6 +3,9 @@
  *
  * vars.db.image.name
  * vars.db.image.version
+ * vars.rsync.image.name
+ * vars.rsync.image.version
+ * vars.rsync.ssh.revision
  *
  * Optional:
  *
@@ -17,12 +20,16 @@
  * vars.db.tolerations[].effect
  * vars.db.tolerations[].key
  * vars.db.tolerations[].value
+ * vars.rsync.limits.cpu
+ * vars.rsync.limits.memory
+ * vars.rsync.requests.cpu
+ * vars.rsync.requests.memory
  */
 
-import "_maradns_probe.stg"
-import "_affinities.stg"
-import "_resources.stg"
-import "_tolerations.stg"
+import "robobeerun-templates/_affinities.stg"
+import "robobeerun-templates/_mysql_probe.stg"
+import "robobeerun-templates/_resources.stg"
+import "robobeerun-templates/_tolerations.stg"
 
 /*
  *
@@ -77,29 +84,24 @@ spec:
       - image: <vars.db.image.name>:<vars.db.image.version>
         name: mariadb
         env:
-        - name: ALLOW_EMPTY_PASSWORD
+        - name: MYSQL_ALLOW_EMPTY_PASSWORD
           value: "no"
-        - name: MARIADB_ROOT_USER
-          valueFrom:
-            secretKeyRef:
-              name: db
-              key: root_user
-        - name: MARIADB_ROOT_PASSWORD
+        - name: MYSQL_ROOT_PASSWORD
           valueFrom:
             secretKeyRef:
               name: db
               key: root_password
-        - name: MARIADB_DATABASE
+        - name: MYSQL_DATABASE
           valueFrom:
             secretKeyRef:
               name: db
               key: wordpress_db
-        - name: MARIADB_USER
+        - name: MYSQL_USER
           valueFrom:
             secretKeyRef:
               name: db
               key: wordpress_user
-        - name: MARIADB_PASSWORD
+        - name: MYSQL_PASSWORD
           valueFrom:
             secretKeyRef:
               name: db
@@ -107,23 +109,84 @@ spec:
         ports:
         - containerPort: 3306
           name: "mysql"
-<resourcesGroup(parent, vars, vars.db.limits, vars.db.requests)>
+        <readinessProbeGroup(parent, vars)>
+        <resourcesGroup(parent, vars, vars.db)>
         volumeMounts:
-        - mountPath: /bitnami/mariadb
+        - mountPath: /var/lib/mysql
           name: db
           subPath: db
-        - mountPath: /opt/bitnami/mariadb/logs
-          name: db
-          subPath: db_logs
-<readinessProbeGroup(parent, vars)>
       restartPolicy: Always
       volumes:
       - name: db
         persistentVolumeClaim:
-          claimName: interscalar-com
-<tolerationMasterGroup(parent, vars, vars.db.allowOnMaster)>
-<tolerationsGroup(parent, vars, vars.db.tolerations, vars.db.allowOnMaster)>
-<affinitiesGroup(parent, vars, vars.db.affinity)>
+          claimName: interscalar-com-1
+      <tolerationMasterGroup(parent, vars, vars.db.allowOnMaster)>
+      <tolerationsGroup(parent, vars, vars.db.tolerations, vars.db.allowOnMaster)>
+      <affinitiesGroup(parent, vars, vars.db.affinity)>
+
+---
+
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: rsync-mariadb
+  namespace: interscalar-com
+  labels:
+    app: rsync-mariadb
+    tier: backup
+    group: interscalar-com
+spec:
+  replicas: 0
+  selector:
+    matchLabels:
+      app: rsync-mariadb
+      tier: backup
+      group: interscalar-com
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: rsync-mariadb
+        tier: backup
+        group: interscalar-com
+    spec:
+      containers:
+      - image: <vars.rsync.image.name>:<vars.rsync.image.version>
+        name: rsync-mariadb
+        env:
+        - name: RSYNC_AUTHORIZED_KEY
+          valueFrom:
+            secretKeyRef:
+              name: rsync-ssh-<vars.rsync.ssh.revision>
+              key: auth-key
+        - name: USER
+          value: "root"
+        - name: RSYNC_STRICT_HOST_KEY_CHECKING_NO
+          value: "true"
+        ports:
+        - containerPort: 2222
+          name: ssh
+        readinessProbe:
+          exec:
+            command:
+            - /readiness.sh
+            - /data/aria_log_control
+          initialDelaySeconds: 5
+          timeoutSeconds: 1
+        <resourcesGroup(parent, vars, vars.rsync)>
+        volumeMounts:
+        - mountPath: /data
+          name: data
+          subPath: db
+      restartPolicy: Always
+      volumes:
+      - name: data
+        persistentVolumeClaim:
+          claimName: interscalar-com-1
+      <affinitiesGroup(parent, vars, vars.db.affinity)>
+      <tolerationMasterGroup(parent, vars, vars.db.allowOnMaster)>
+      <tolerationsGroup(parent, vars, vars.db.tolerations, vars.db.allowOnMaster)>
 
 ---
 
