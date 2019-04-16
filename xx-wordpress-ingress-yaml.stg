@@ -2,8 +2,8 @@
  * Mandatory:
  *
  * vars.wordpress.hosts[]
+ * vars.wordpress.issuer
  * vars.nginx.clientMaxBodySize
- *
  */
 
 import "robobeerun-templates/_cert_config.stg"
@@ -18,30 +18,29 @@ xx-wordpress-ingress-yaml(parent, vars) ::= <<
 apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
-  name: wordpress
-  namespace: interscalar-com
+  name: www-site-com
+  namespace: www-interscalar-com
   labels:
     app: wordpress
     tier: frontend
-    deployment: wordpress
   annotations:
     <ingressDefaultAnnotations(vars.nginx)>
 spec:
-  <ingressDefaultSpec(vars.wordpress, "wordpress-interscalar-com")>
+  <ingressDefaultSpec(vars.wordpress, "www-interscalar-com")>
 
 ---
 
-<ingressService(vars.nginx, "wordpress-interscalar-com", "wordpress", "interscalar-com")>
+<ingressService(vars.nginx, "www-interscalar-com", "wordpress", "www-interscalar-com")>
 
 ---
 
 apiVersion: certmanager.k8s.io/v1alpha1
 kind: Certificate
 metadata:
-  name: interscalar-com
-  namespace: interscalar-com
+  name: www-interscalar-com
+  namespace: www-interscalar-com
 spec:
-  <certDefaultSpecProd(vars.wordpress, "wordpress-interscalar-com")>
+  <certDefaultSpec(vars.wordpress, "www-interscalar-com-tls", vars.wordpress.issuer)>
 
 ---
 
