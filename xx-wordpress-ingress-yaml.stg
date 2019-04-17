@@ -26,11 +26,11 @@ metadata:
   annotations:
     <ingressDefaultAnnotations(vars.nginx)>
 spec:
-  <ingressDefaultSpec(vars.wordpress, "www-interscalar-com")>
+  <ingressDefaultSpec("www-interscalar-com", vars.wordpress)>
 
 ---
 
-<ingressService(vars.nginx, "www-interscalar-com", "wordpress", "www-interscalar-com")>
+<ingressService("www-interscalar-com", "wordpress", "www-interscalar-com", vars.nginx)>
 
 ---
 
