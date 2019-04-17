@@ -218,17 +218,17 @@ spec:
         - name: WORDPRESS_DB_NAME
           valueFrom:
             secretKeyRef:
-              name: db
+              name: db-<vars.db.revision>
               key: database
         - name: WORDPRESS_DB_USER
           valueFrom:
             secretKeyRef:
-              name: db
+              name: db-<vars.db.revision>
               key: user
         - name: WORDPRESS_DB_PASSWORD
           valueFrom:
             secretKeyRef:
-              name: db
+              name: db-<vars.db.revision>
               key: password
         - name: WORDPRESS_DB_HOST
           value: "<vars.db.host>:<vars.db.port>"
