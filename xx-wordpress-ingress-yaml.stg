@@ -18,7 +18,7 @@ xx-wordpress-ingress-yaml(parent, vars) ::= <<
 apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
-  name: www-site-com
+  name: www-interscalar-com
   namespace: www-interscalar-com
   labels:
     app: wordpress
@@ -26,7 +26,7 @@ metadata:
   annotations:
     <ingressDefaultAnnotations(vars.nginx)>
 spec:
-  <ingressDefaultSpec("www-interscalar-com", vars.wordpress)>
+  <ingressDefaultSpec("www-interscalar-com", vars.wordpress.hosts)>
 
 ---
 
