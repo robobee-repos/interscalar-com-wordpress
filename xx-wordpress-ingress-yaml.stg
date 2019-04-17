@@ -40,7 +40,7 @@ metadata:
   name: www-interscalar-com
   namespace: www-interscalar-com
 spec:
-  <certDefaultSpec(vars.wordpress, "www-interscalar-com-tls", vars.wordpress.issuer)>
+  <certDefaultSpec("www-interscalar-com-tls", vars.wordpress.hosts, vars.wordpress.issuer)>
 
 ---
 
