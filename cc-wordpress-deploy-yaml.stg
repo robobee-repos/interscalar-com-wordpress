@@ -48,13 +48,14 @@
  * vars.wordpress.tolerations[].value
  * vars.wordpress.livenessProbe.initialDelaySeconds
  * vars.wordpress.readinessProbe.initialDelaySeconds
- * vars.wordpress.httpHeaders[].name
- * vars.wordpress.httpHeaders[].value
  * 
  * vars.nginx.limits.cpu
  * vars.nginx.limits.memory
  * vars.nginx.requests.cpu
  * vars.nginx.requests.memory
+ * vars.nginx.httpHeaders[].name
+ * vars.nginx.httpHeaders[].value
+ * vars.nginx.readinessProbeEnabled
  * 
  * vars.rsync.limits.cpu
  * vars.rsync.limits.memory
@@ -270,7 +271,7 @@ spec:
         ports:
         - containerPort: 8080
           name: "http"
-        <nginxReadinessProbe(parent, vars, vars.wordpress)>
+        <nginxReadinessProbe(parent, vars, vars.nginx)>
         <resourcesGroup(parent, vars, vars.nginx)>
         volumeMounts:
         - mountPath: /var/www/html
