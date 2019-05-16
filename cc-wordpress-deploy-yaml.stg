@@ -16,12 +16,19 @@
  * vars.wordpress.php.opcacheEnableCLI
  * vars.wordpress.php.opcacheMemoryConsumption
  * vars.wordpress.hosts[]
+ * 
+ * vars.db.host
+ *     The MySQL host, for example 'robobeerun-com-mariadb.robobeerun-com-mariadb.svc'.
+ * vars.db.port
+ *     The MySQL port, for example '3306'.
+ * 
  * vars.nginx.image.name
  * vars.nginx.image.version
  * vars.nginx.workerProcesses
  * vars.nginx.workerConnections
  * vars.nginx.clientMaxBodySize
  * vars.nginx.readTimeout
+ * 
  * vars.rsync.image.name
  * vars.rsync.image.version
  * vars.rsync.ssh.revision
@@ -39,13 +46,17 @@
  * vars.wordpress.tolerations[].effect
  * vars.wordpress.tolerations[].key
  * vars.wordpress.tolerations[].value
- * vars.wordpress.initialDelaySeconds
- * vars.wordpress.httpHeaders[].name
- * vars.wordpress.httpHeaders[].value
+ * vars.wordpress.livenessProbe.initialDelaySeconds
+ * vars.wordpress.readinessProbe.initialDelaySeconds
+ * 
  * vars.nginx.limits.cpu
  * vars.nginx.limits.memory
  * vars.nginx.requests.cpu
  * vars.nginx.requests.memory
+ * vars.nginx.httpHeaders[].name
+ * vars.nginx.httpHeaders[].value
+ * vars.nginx.readinessProbeEnabled
+ * 
  * vars.rsync.limits.cpu
  * vars.rsync.limits.memory
  * vars.rsync.requests.cpu
@@ -58,6 +69,7 @@ import "robobeerun-templates/_ingress_config.stg"
 import "robobeerun-templates/_nginx_config.stg"
 import "robobeerun-templates/_nginx_probe.stg"
 import "robobeerun-templates/_tolerations.stg"
+import "robobeerun-templates/_resources.stg"
 
 /*
  *
@@ -70,11 +82,10 @@ apiVersion: v1
 kind: Service
 metadata:
   name: wordpress
-  namespace: interscalar-com
+  namespace: www-interscalar-com
   labels:
     app: wordpress
     tier: frontend
-    group: interscalar-com
 spec:
   ports:
   - name: "http"
@@ -89,11 +100,10 @@ apiVersion: v1
 kind: ConfigMap
 metadata:
   name: wordpress-nginx-<vars.wordpress.revision>
-  namespace: interscalar-com
+  namespace: www-interscalar-com
   labels:
     app: nginx
     tier: frontend
-    group: interscalar-com
 data:
   nginx.conf: |
     <nginxDefaults(parent, vars, vars.nginx)>
@@ -125,11 +135,10 @@ apiVersion: v1
 kind: Service
 metadata:
   name: wordpress-php
-  namespace: interscalar-com
+  namespace: www-interscalar-com
   labels:
     app: wordpress
     tier: frontend
-    group: interscalar-com
 spec:
   ports:
   - name: "php"
@@ -144,25 +153,66 @@ apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
   name: wordpress
-  namespace: interscalar-com
+  namespace: www-interscalar-com
   labels:
     app: wordpress
     tier: frontend
-    group: interscalar-com
 spec:
   replicas: 1
   selector:
     matchLabels:
       app: wordpress
       tier: frontend
-      group: interscalar-com
   template:
     metadata:
       labels:
         app: wordpress
         tier: frontend
-        group: interscalar-com
     spec:
+      initContainers:
+      - name: init-db
+        image: <vars.db.image.name>:<vars.db.image.version>
+        env:
+        - name: MYSQL_USER
+          valueFrom:
+            secretKeyRef:
+              name: db-<vars.db.revision>
+              key: user
+        - name: MYSQL_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: db-<vars.db.revision>
+              key: password
+        - name: MYSQL_DATABASE
+          valueFrom:
+            secretKeyRef:
+              name: db-<vars.db.revision>
+              key: database
+        - name: MYSQL_ADMIN_USER
+          valueFrom:
+            secretKeyRef:
+              name: db-<vars.db.revision>
+              key: admin_user
+        - name: MYSQL_ADMIN_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: db-<vars.db.revision>
+              key: admin_password
+        - name: MYSQL_HOST
+          value: <vars.db.host>
+        - name: MYSQL_PORT
+          value: "<vars.db.port>"
+        command:
+        - /bin/sh
+        - -i
+        - -c
+        - >
+          while ! mysql -u${MYSQL_ADMIN_USER} -p${MYSQL_ADMIN_PASSWORD} -h${MYSQL_HOST} -P${MYSQL_PORT} -e "SELECT 1;"; do sleep 3; done;
+          mysql -u${MYSQL_ADMIN_USER} -p${MYSQL_ADMIN_PASSWORD} -h${MYSQL_HOST} -P${MYSQL_PORT} -e "CREATE USER '${MYSQL_USER}' IDENTIFIED BY '${MYSQL_PASSWORD}';";
+          mysql -u${MYSQL_ADMIN_USER} -p${MYSQL_ADMIN_PASSWORD} -h${MYSQL_HOST} -P${MYSQL_PORT} -e "GRANT USAGE ON *.* TO '${MYSQL_USER}'@'%' IDENTIFIED BY '${MYSQL_PASSWORD}';";
+          mysql -u${MYSQL_ADMIN_USER} -p${MYSQL_ADMIN_PASSWORD} -h${MYSQL_HOST} -P${MYSQL_PORT} -e "GRANT ALL privileges ON ${MYSQL_DATABASE}.* TO '${MYSQL_USER}'@'%';";
+          mysql -u${MYSQL_ADMIN_USER} -p${MYSQL_ADMIN_PASSWORD} -h${MYSQL_HOST} -P${MYSQL_PORT} -e "FLUSH PRIVILEGES;";
+          mysql -u${MYSQL_ADMIN_USER} -p${MYSQL_ADMIN_PASSWORD} -h${MYSQL_HOST} -P${MYSQL_PORT} -e "SHOW GRANTS FOR '${MYSQL_USER}'@'%';";
       containers:
       - image: <vars.wordpress.image.name>:<vars.wordpress.image.version>
         name: wordpress
@@ -170,18 +220,20 @@ spec:
         - name: WORDPRESS_DB_NAME
           valueFrom:
             secretKeyRef:
-              name: db
-              key: wordpress_db
+              name: db-<vars.db.revision>
+              key: database
         - name: WORDPRESS_DB_USER
           valueFrom:
             secretKeyRef:
-              name: db
-              key: wordpress_user
+              name: db-<vars.db.revision>
+              key: user
         - name: WORDPRESS_DB_PASSWORD
           valueFrom:
             secretKeyRef:
-              name: db
-              key: wordpress_password
+              name: db-<vars.db.revision>
+              key: password
+        - name: WORDPRESS_DB_HOST
+          value: "<vars.db.host>:<vars.db.port>"
         - name: PHP_MEMORY_LIMIT
           value: "<vars.wordpress.php.memoryLimit>"
         - name: PHP_MAX_EXECUTION_TIME
@@ -206,23 +258,10 @@ spec:
           value: "<vars.wordpress.php.opcacheEnableCLI>"
         - name: PHP_OPCACHE_MEMORY_CONSUMPTION
           value: "<vars.wordpress.php.opcacheMemoryConsumption>"
-        - name: WORDPRESS_DB_HOST
-          value: "db:3306"
         ports:
         - containerPort: 9000
           name: "php"
-        livenessProbe:
-          tcpSocket:
-            port: "php"
-          initialDelaySeconds: <if(vars.wordpress.initialDelaySeconds)><vars.wordpress.initialDelaySeconds><else>60<endif>
-          periodSeconds: 60
-          timeoutSeconds: 10
-        readinessProbe:
-          tcpSocket:
-            port: "php"
-          initialDelaySeconds: <if(vars.wordpress.initialDelaySeconds)><vars.wordpress.initialDelaySeconds><else>60<endif>
-          periodSeconds: 60
-          timeoutSeconds: 10
+        <tcpProbesPortGroup(vars.wordpress, "php")>
         <resourcesGroup(parent, vars, vars.wordpress)>
         volumeMounts:
         - mountPath: /var/www/html
@@ -233,7 +272,7 @@ spec:
         ports:
         - containerPort: 8080
           name: "http"
-        <nginxReadinessProbe(parent, vars, vars.wordpress)>
+        <nginxReadinessProbe(parent, vars, vars.nginx)>
         <resourcesGroup(parent, vars, vars.nginx)>
         volumeMounts:
         - mountPath: /var/www/html
@@ -245,7 +284,7 @@ spec:
       volumes:
       - name: html
         persistentVolumeClaim:
-          claimName: interscalar-com-1
+          claimName: www-interscalar-com
       - name: nginx-nginx-config
         configMap:
           name: wordpress-nginx-<vars.wordpress.revision>
@@ -259,7 +298,7 @@ apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
   name: rsync-wordpress
-  namespace: interscalar-com
+  namespace: www-interscalar-com
   labels:
     app: rsync-wordpress
     tier: backup
@@ -310,7 +349,7 @@ spec:
       volumes:
       - name: data
         persistentVolumeClaim:
-          claimName: interscalar-com-1
+          claimName: www-interscalar-com
       <affinitiesGroup(parent, vars, vars.wordpress.affinity)>
       <tolerationMasterGroup(parent, vars, vars.wordpress.allowOnMaster)>
       <tolerationsGroup(parent, vars, vars.wordpress.tolerations, vars.wordpress.allowOnMaster)>
