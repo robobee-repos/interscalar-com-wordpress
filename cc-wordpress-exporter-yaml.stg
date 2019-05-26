@@ -30,8 +30,6 @@ metadata:
   namespace: www-interscalar-com
   labels:
     app: wordpress-exporter
-    tier: metrics
-    group: www-interscalar-com
 spec:
   ports:
   - name: "metrics"
@@ -39,22 +37,18 @@ spec:
     targetPort: 8888
   selector:
     app: wordpress-exporter
-    tier: metrics
-    group: www-interscalar-com
 
 ---
 
 apiVersion: monitoring.coreos.com/v1
 kind: ServiceMonitor
 metadata:
-  name: www-interscalar-com-wordpress-exporter
-  namespace: monitoring
+  name: wordpress-exporter
+  namespace: www-interscalar-com
 spec:
   selector:
     matchLabels:
       app: wordpress-exporter
-      tier: metrics
-      group: www-interscalar-com
   endpoints:
     - port: metrics
 
@@ -103,20 +97,17 @@ metadata:
   labels:
     app: wordpress-exporter
     tier: metrics
-    group: www-interscalar-com
 spec:
   replicas: 1
   selector:
     matchLabels:
       app: wordpress-exporter
       tier: metrics
-      group: www-interscalar-com
   template:
     metadata:
       labels:
         app: wordpress-exporter
         tier: metrics
-        group: www-interscalar-com
     spec:
       containers:
       - image: erwin82/wordpress_exporter:latest
