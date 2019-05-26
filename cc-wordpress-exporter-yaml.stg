@@ -1,0 +1,151 @@
+/*
+ * Mandatory:
+ *
+ * vars.db.revision
+ * vars.db.host
+ *     The MySQL host, for example 'robobeerun-com-mariadb.robobeerun-com-mariadb.svc'.
+ * vars.db.port
+ *     The MySQL port, for example '3306'.
+ * 
+ * vars.exporter
+ * 
+ */
+
+import "robobeerun-templates/_affinities.stg"
+import "robobeerun-templates/_cert_config.stg"
+import "robobeerun-templates/_ingress_config.stg"
+import "robobeerun-templates/_nginx_config.stg"
+import "robobeerun-templates/_nginx_probe.stg"
+import "robobeerun-templates/_tolerations.stg"
+import "robobeerun-templates/_resources.stg"
+
+/*
+ *
+ */
+cc-wordpress-deploy-yaml(parent, vars) ::= <<
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: wordpress-exporter
+  namespace: www-interscalar-com
+  labels:
+    app: wordpress-exporter
+    tier: metrics
+spec:
+  ports:
+  - name: "metrics"
+    port: 8888
+    targetPort: 8888
+  selector:
+    app: wordpress-exporter
+
+---
+
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: wordpress-exporter
+  namespace: monitoring
+spec:
+  selector:
+    matchLabels:
+      app: wordpress-exporter
+  endpoints:
+    - port: metrics
+
+---
+
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: prometheus-k8s
+  namespace: www-interscalar-com
+rules:
+- apiGroups:
+  - ""
+  resources:
+  - services
+  - endpoints
+  - pods
+  verbs:
+  - get
+  - list
+  - watch
+
+---
+
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: prometheus-k8s
+  namespace: www-interscalar-com
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: prometheus-k8s
+subjects:
+- kind: ServiceAccount
+  name: prometheus-k8s
+  namespace: monitoring
+
+---
+
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: wordpress-exporter
+  namespace: www-interscalar-com
+  labels:
+    app: wordpress-exporter
+    tier: metrics
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: wordpress-exporter
+      tier: metrics
+  template:
+    metadata:
+      labels:
+        app: wordpress-exporter
+        tier: metrics
+    spec:
+      containers:
+      - image: erwin82/wordpress_exporter:latest
+        name: wordpress-exporter
+        env:
+        - name: WORDPRESS_DB_NAME
+          valueFrom:
+            secretKeyRef:
+              name: db-<vars.db.revision>
+              key: database
+        - name: WORDPRESS_DB_USER
+          valueFrom:
+            secretKeyRef:
+              name: db-<vars.db.revision>
+              key: user
+        - name: WORDPRESS_DB_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: db-<vars.db.revision>
+              key: password
+        - name: WORDPRESS_DB_HOST
+          value: "<vars.db.host>"
+        - name: WORDPRESS_DB_PORT
+          value: "<vars.db.port>"
+        ports:
+        - containerPort: 8888
+          name: "metrics"
+        <tcpProbesPortGroup(vars.exporter, "metrics")>
+        <resourcesGroup(parent, vars, vars.exporter)>
+      restartPolicy: Always
+      <affinitiesGroup(parent, vars, vars.wordpress.affinity)>
+      <tolerationMasterGroup(parent, vars, vars.wordpress.allowOnMaster)>
+      <tolerationsGroup(parent, vars, vars.wordpress.tolerations, vars.wordpress.allowOnMaster)>
+
+---
+
+>>
