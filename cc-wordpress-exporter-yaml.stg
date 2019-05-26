@@ -19,7 +19,7 @@ import "robobeerun-templates/tcp_probe.stg"
 /*
  *
  */
-cc-wordpress-deploy-yaml(parent, vars) ::= <<
+cc-wordpress-exporter-yaml(parent, vars) ::= <<
 
 ---
 
