@@ -31,6 +31,7 @@ metadata:
   labels:
     app: wordpress-exporter
     tier: metrics
+    group: www-interscalar-com
 spec:
   ports:
   - name: "metrics"
@@ -44,12 +45,14 @@ spec:
 apiVersion: monitoring.coreos.com/v1
 kind: ServiceMonitor
 metadata:
-  name: wordpress-exporter
+  name: www-interscalar-com-wordpress-exporter
   namespace: monitoring
 spec:
   selector:
     matchLabels:
       app: wordpress-exporter
+      tier: metrics
+      group: www-interscalar-com
   endpoints:
     - port: metrics
 
