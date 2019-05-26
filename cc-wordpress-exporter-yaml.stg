@@ -103,17 +103,20 @@ metadata:
   labels:
     app: wordpress-exporter
     tier: metrics
+    group: www-interscalar-com
 spec:
   replicas: 1
   selector:
     matchLabels:
       app: wordpress-exporter
       tier: metrics
+      group: www-interscalar-com
   template:
     metadata:
       labels:
         app: wordpress-exporter
         tier: metrics
+        group: www-interscalar-com
     spec:
       containers:
       - image: erwin82/wordpress_exporter:latest
