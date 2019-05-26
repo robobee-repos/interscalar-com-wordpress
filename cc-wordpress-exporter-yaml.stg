@@ -39,6 +39,8 @@ spec:
     targetPort: 8888
   selector:
     app: wordpress-exporter
+    tier: metrics
+    group: www-interscalar-com
 
 ---
 
